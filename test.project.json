@@ -1,0 +1,14 @@
+{
+  "name": "permissions",
+  "tree": {
+    "$className": "DataModel",
+
+    "ServerScriptService": {
+      "Permissions": {"$path": "lib"},
+      "testRunner": {
+        "$path": "Tests/testRunner.server.lua",
+        "PermissionsConfig": {"$path": "Tests/PermissionsConfig.lua"}
+      }
+    }
+  }
+}
