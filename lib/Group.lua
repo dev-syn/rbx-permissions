@@ -86,7 +86,7 @@ end
     @within Group
     @param permission -- The permission node that will be queried
     @return boolean
-    This method queries if a permission node is in this group.
+    This method queries if a permission node is in this group, negated permission nodes take priority and when present in the groups permissions it will return false.
 ]=]
 function Group.HasPermission(self: Group,permission: string) : boolean
     local groupPerms: {string} = self._Permissions;

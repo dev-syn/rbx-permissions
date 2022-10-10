@@ -42,9 +42,9 @@ local Group: Types.Schema_Group = require(script:FindFirstChild("Group"));
     @class Permissions
     This class was designed to track permissions for a user or a group for granting access to certain commands and features inside your game.
     # Definitions
-    - "<example>": Any text within < and > is a mandatory placeholder
-    - "<?:example>": Any text within < ?: > is a optional placeholder and is not required to be used
-    - "permission node": This is a string which contains a <category>.<permission>.<?:subperm> format
+    - "&lt;example&gt;": Any text within &lt; &gt; is a mandatory placeholder
+    - "&lt; ?: example &gt;": Any text within &lt; ?: &gt; is a optional placeholder and is not required to be used
+    - "permission node": This is a string which contains a &lt;category&gt;.&lt;permission&gt;.&lt; ?: subperm&gt; format
 ]=]
 local Permissions = {} :: Permissions;
 
@@ -123,7 +123,7 @@ end
 local isInitialized: boolean = false;
 --[=[
     @within Permissions
-    @param permissionsConfig ModuleScript? -- The config used for setting up and storing the preset permissions & groups
+    @param permissionsConfig Dictionary<any>? -- The config used for setting up and storing the preset permissions & groups
     This method **Must** be called before using any other functions inside Permissions.
 ]=]
 function Permissions.Init(permissionsConfig: Dictionary<any>?) : Permissions
