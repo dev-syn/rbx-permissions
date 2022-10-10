@@ -1,3 +1,5 @@
+Packages/_Index
+
 /build
 /*.rbxlx
-/*.rbxlx.lock
+**/*.lock
