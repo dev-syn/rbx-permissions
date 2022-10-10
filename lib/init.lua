@@ -1,5 +1,6 @@
 --- @module lib/Types
 local Types = require(script:FindFirstChild("Types"));
+export type Dictionary<T> = Types.Dictionary<T>;
 export type Group = Types.Group;
 export type Permissions = Types.Permissions;
 
@@ -90,7 +91,7 @@ local isInitialized: boolean = false;
     @param permissionsConfig ModuleScript? -- The config used for setting up and storing the preset permissions & groups
     This method **Must** be called before using any other functions inside Permissions.
 ]=]
-function Permissions.Init(permissionsConfig: ModuleScript?) : Permissions
+function Permissions.Init(permissionsConfig: Dictionary<any>?) : Permissions
     if isInitialized then return Permissions; end
     if permissionsConfig then PermissionsConfig = require(permissionsConfig); end
 
