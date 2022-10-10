@@ -124,7 +124,7 @@ local isInitialized: boolean = false;
 ]=]
 function Permissions.Init(permissionsConfig: Dictionary<any>?) : Permissions
     if isInitialized then return Permissions; end
-    if permissionsConfig then PermissionsConfig = require(permissionsConfig); end
+    if typeof(permissionsConfig) == "table" then PermissionsConfig = permissionsConfig end
 
     if PermissionsConfig then
         -- Add the created groups from the config
