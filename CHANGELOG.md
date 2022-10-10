@@ -2,6 +2,7 @@
 
 ## [Unreleased]
 ### Added
+- Added method Permissions.IsUserInGroup() to see if a user is in a group
 ### Changed
 ### Removed
 

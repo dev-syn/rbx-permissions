@@ -22,11 +22,12 @@ export type Permissions = {
     Group: Schema_Group,
 
     _UserPermissions: Map<Player,{string}>,
-    _UserGroups: Map<Player,{string}>,
+    _UserGroups: Map<Player,{Group}>,
     _Groups: Dictionary<Group>,
 
     Init: (permissionsConfig: ModuleScript?) -> Permissions,
     FindGroup: (name: string) -> Group,
+    IsUserInGroup: (plr: Player,group: Group) -> boolean,
     SetUserGroup: (plr: Player,group: Group) -> (),
     RemoveUserGroup: (plr: Player,group: Group) -> (),
     GrantPermission: (plr: Player,permission: string) -> (),

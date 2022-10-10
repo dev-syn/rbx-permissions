@@ -128,12 +128,20 @@ end
 
 --[=[
     @within Permissions
+    This method is for checking if a user is in a specific group returning true if they are otherwise false
+]=]
+function Permissions.IsUserInGroup(plr: Player,group: Group) : boolean
+    return table.find(Permissions._UserGroups[plr],group) and true or false;
+end
+
+--[=[
+    @within Permissions
     @param plr Player
     @param group Group
     This function is used to set a group to a user(player)
 ]=]
 function Permissions.SetUserGroup(plr: Player,group: Group)
-    local userGroups: {any} = Permissions._UserGroups[plr];
+    local userGroups: {Group} = Permissions._UserGroups[plr];
 
     -- Check if player is already has that group
     if table.find(userGroups,group) then return; end
@@ -148,7 +156,7 @@ end
     This function is used to remove a group from a user(player).
 ]=]
 function Permissions.RemoveUserGroup(plr: Player,group: Group)
-    local userGroups: {any} = Permissions._UserGroups[plr];
+    local userGroups: {Group} = Permissions._UserGroups[plr];
     -- Remove group from user if it exists
     local groupIndex: number? = table.find(userGroups,group);
     if groupIndex then table.remove(userGroups,groupIndex); end
