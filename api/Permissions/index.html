@@ -13,8 +13,8 @@
 - &quot;&amp;lt;example&amp;gt;&quot;: Any text within &amp;lt; &amp;gt; is a mandatory placeholder
 - &quot;&amp;lt; ?: example &amp;gt;&quot;: Any text within &amp;lt; ?: &amp;gt; is a optional placeholder and is not required to be used
 - &quot;permission node&quot;: This is a string which contains a &amp;lt;category&amp;gt;.&amp;lt;permission&amp;gt;.&amp;lt; ?: subperm&amp;gt; format"><link data-rh="true" rel="canonical" href="https://dev-syn.github.io/rbx-permissions/api/Permissions"><link data-rh="true" rel="alternate" href="https://dev-syn.github.io/rbx-permissions/api/Permissions" hreflang="en"><link data-rh="true" rel="alternate" href="https://dev-syn.github.io/rbx-permissions/api/Permissions" hreflang="x-default"><link rel="stylesheet" href="/rbx-permissions/assets/css/styles.bc734c04.css">
-<link rel="preload" href="/rbx-permissions/assets/js/runtime~main.50d4f78b.js" as="script">
-<link rel="preload" href="/rbx-permissions/assets/js/main.6b986b3c.js" as="script">
+<link rel="preload" href="/rbx-permissions/assets/js/runtime~main.7aad3c15.js" as="script">
+<link rel="preload" href="/rbx-permissions/assets/js/main.da45bfc3.js" as="script">
 </head>
 <body class="navigation-with-keyboard">
 <script>!function(){function e(e){document.documentElement.setAttribute("data-theme",e)}var t=function(){var e=null;try{e=localStorage.getItem("theme")}catch(e){}return e}();null!==t?e(t):window.matchMedia("(prefers-color-scheme: dark)").matches?e("dark"):(window.matchMedia("(prefers-color-scheme: light)").matches,e("light"))}()</script><div id="__docusaurus">
@@ -28,7 +28,7 @@
 </ul>
 </div></header><h2 class="anchor anchorWithStickyNavbar_LWe7" id="properties">Properties<a class="hash-link" href="#properties" title="Direct link to heading">​</a></h2><div class="divider_rE5g"></div><h3 class="anchor anchorWithStickyNavbar_LWe7" id="Group"><code style="text-decoration:none">Group</code><a class="hash-link" href="#Group" title="Direct link to heading">​</a></h3><div class="repositoryDetailsContainer_BPdw"><a class="sourceButton_sEho" href="https://github.com/dev-syn/rbx-permissions/blob/main/lib/init.lua#L56"><div class="sourceButtonText_Vh0m">&lt;/&gt;</div></a></div><div class="memberString_GwaU"><code>Permissions<!-- -->.<!-- -->Group<!-- -->:<!-- --> </code> <code class="blue_P4bS">Schema_Group</code></div><div>
 <p>This property contains the Group class</p>
-</div><h2 class="anchor anchorWithStickyNavbar_LWe7" id="functions">Functions<a class="hash-link" href="#functions" title="Direct link to heading">​</a></h2><div class="divider_rE5g"></div><h3 class="anchor anchorWithStickyNavbar_LWe7" id="Init"><code style="text-decoration:none">Init</code><a class="hash-link" href="#Init" title="Direct link to heading">​</a></h3><div class="repositoryDetailsContainer_BPdw"><a class="sourceButton_sEho" href="https://github.com/dev-syn/rbx-permissions/blob/main/lib/init.lua#L129"><div class="sourceButtonText_Vh0m">&lt;/&gt;</div></a></div><div class="memberString_GwaU"><code>Permissions<!-- -->.</code><code class="green_DgR4">Init</code><code>(</code><div class="inset_uKQm"><div><code>permissionsConfig<!-- -->: </code><code class="blue_P4bS"><a style="text-decoration:underline;color:inherit" href="https://developer.roblox.com/en-us/api-reference/class/ModuleScript" target="_blank" rel="noopener noreferrer">ModuleScript?<svg xmlns="http://www.w3.org/2000/svg" aria-hidden="true" x="0px" y="0px" viewBox="0 0 100 100" width="15" height="15" class="icon outbound" style="color:gray;vertical-align:middle;margin-left:2px"><path fill="currentColor" d="M18.8,85.1h56l0,0c2.2,0,4-1.8,4-4v-32h-8v28h-48v-48h28v-8h-32l0,0c-2.2,0-4,1.8-4,4v56C14.8,83.3,16.6,85.1,18.8,85.1z"></path> <polygon fill="currentColor" points="45.7,48.7 51.3,54.3 77.2,28.5 77.2,37.2 85.2,37.2 85.2,14.9 62.8,14.9 62.8,22.9 71.5,22.9"></polygon></svg></a></code><span class="inlineDescription_G7Er">-- <span>
+</div><h2 class="anchor anchorWithStickyNavbar_LWe7" id="functions">Functions<a class="hash-link" href="#functions" title="Direct link to heading">​</a></h2><div class="divider_rE5g"></div><h3 class="anchor anchorWithStickyNavbar_LWe7" id="Init"><code style="text-decoration:none">Init</code><a class="hash-link" href="#Init" title="Direct link to heading">​</a></h3><div class="repositoryDetailsContainer_BPdw"><a class="sourceButton_sEho" href="https://github.com/dev-syn/rbx-permissions/blob/main/lib/init.lua#L129"><div class="sourceButtonText_Vh0m">&lt;/&gt;</div></a></div><div class="memberString_GwaU"><code>Permissions<!-- -->.</code><code class="green_DgR4">Init</code><code>(</code><div class="inset_uKQm"><div><code>permissionsConfig<!-- -->: </code><code class="blue_P4bS">Dictionary</code><code class="op_lSLc">&lt;</code><code class="blue_P4bS">any</code><code class="op_lSLc">&gt;</code><code class="blue_P4bS">?</code><span class="inlineDescription_G7Er">-- <span>
 <p>The config used for setting up and storing the preset permissions &#x26; groups</p>
 </span></span></div></div><code>) → </code><code class="blue_P4bS"><a style="text-decoration:underline;color:inherit" href="/rbx-permissions/api/Permissions">Permissions</a></code></div><div>
 <p>This method <strong>Must</strong> be called before using any other functions inside Permissions.</p>
@@ -57,7 +57,7 @@
                 {
                     &quot;name&quot;: &quot;permissionsConfig&quot;,
                     &quot;desc&quot;: &quot;The config used for setting up and storing the preset permissions &amp; groups&quot;,
-                    &quot;lua_type&quot;: &quot;ModuleScript?&quot;
+                    &quot;lua_type&quot;: &quot;Dictionary&lt;any&gt;?&quot;
                 }
             ],
             &quot;returns&quot;: [
@@ -286,7 +286,7 @@
         &quot;path&quot;: &quot;lib/init.lua&quot;
     }
 }</pre></details></div><div class="col col--3"><div class="tableOfContents_bqdL thin-scrollbar"><ul class="table-of-contents table-of-contents__left-border"><li><a href="#types" class="table-of-contents__link toc-highlight">Types</a></li><li><a href="#properties" class="table-of-contents__link toc-highlight">Properties</a><ul><li><a href="#Group" class="table-of-contents__link toc-highlight">Group</a></li></ul></li><li><a href="#functions" class="table-of-contents__link toc-highlight">Functions</a><ul><li><a href="#FindGroup" class="table-of-contents__link toc-highlight">.FindGroup</a></li><li><a href="#GrantPermission" class="table-of-contents__link toc-highlight">.GrantPermission</a></li><li><a href="#HasPermission" class="table-of-contents__link toc-highlight">.HasPermission</a></li><li><a href="#Init" class="table-of-contents__link toc-highlight">.Init</a></li><li><a href="#IsUserInGroup" class="table-of-contents__link toc-highlight">.IsUserInGroup</a></li><li><a href="#RemoveUserGroup" class="table-of-contents__link toc-highlight">.RemoveUserGroup</a></li><li><a href="#RevokePermission" class="table-of-contents__link toc-highlight">.RevokePermission</a></li><li><a href="#SetUserGroup" class="table-of-contents__link toc-highlight">.SetUserGroup</a></li></ul></li></ul></div></div></div></div></main></div></div><footer class="footer footer--dark"><div class="container container-fluid"><div class="footer__bottom text--center"><div class="footer__copyright">Copyright © 2022 dev-syn. Built with Moonwave and Docusaurus.</div></div></div></footer></div>
-<script src="/rbx-permissions/assets/js/runtime~main.50d4f78b.js"></script>
-<script src="/rbx-permissions/assets/js/main.6b986b3c.js"></script>
+<script src="/rbx-permissions/assets/js/runtime~main.7aad3c15.js"></script>
+<script src="/rbx-permissions/assets/js/main.da45bfc3.js"></script>
 </body>
 </html>
