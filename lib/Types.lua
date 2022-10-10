@@ -25,7 +25,7 @@ export type Permissions = {
     _UserGroups: Map<Player,{Group}>,
     _Groups: Dictionary<Group>,
 
-    Init: (permissionsConfig: ModuleScript?) -> Permissions,
+    Init: (permissionsConfig: Dictionary<any>?) -> Permissions,
     FindGroup: (name: string) -> Group,
     IsUserInGroup: (plr: Player,group: Group) -> boolean,
     SetUserGroup: (plr: Player,group: Group) -> (),
