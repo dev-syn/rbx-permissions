@@ -1,4 +1,4 @@
 title = "Permissions"
 gitSourceBranch = "main"
 changelog = true
-classOrder = ["Permissions","Group"]
+classOrder = ["Permissions","Group","Config"]
