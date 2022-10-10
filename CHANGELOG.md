@@ -4,11 +4,11 @@
 ### Added
 - Permissions.IsUserInGroup() to see if a user is in a group
 - TestEZ for testing
-- Functionality for using negated permission nodes
+- Functionality for using negated permission nodes in Permissions & Group classes
 - Internal function isNodeNegated() to check for negated permission nodes
 ### Changed
 - Permissions.Init() to take a table as a config rather then ModuleScript
-- Moonwave documentation typos fixed
+- Moonwave documentation improvements/typos
 ### Removed
 - Outdated test config
 - Changelog unnecessary tags

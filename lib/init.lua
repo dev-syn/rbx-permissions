@@ -41,13 +41,10 @@ local Group: Types.Schema_Group = require(script:FindFirstChild("Group"));
 --[=[
     @class Permissions
     This class was designed to track permissions for a user or a group for granting access to certain commands and features inside your game.
-    ```md
-        # Notes
-
-            ## Definitions - permission group
-            - "permission node": This is a string which is represented as a permission that usually contains nodes(a literal '.')
-
-    ```
+    # Definitions - permission group
+    - "<example>": Any text within < and > is a mandatory placeholder
+    - "<?:example>": Any text within < ?: > is a optional placeholder and is not required to be used
+    - "permission node": This is a string which contains a <category>.<permission>.<?:subperm> format
 ]=]
 local Permissions = {} :: Permissions;
 
@@ -213,7 +210,7 @@ end
 ]=]
 function Permissions.GrantPermission(plr: Player,permission: string)
     local userPermissions: {string} = Permissions._UserPermissions[plr];
-    -- Revoke negative permission nodes if you are trying to grant that permission
+    -- Revoke negated permission nodes if you are trying to grant that permission
     if not isNodeNegated(permission) then Permissions.RevokePermission(plr,"-"..permission); end
     if not table.find(userPermissions,permission) then table.insert(userPermissions,permission); end
 end
