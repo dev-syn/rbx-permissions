@@ -1,3 +1,34 @@
+--[=[
+    @class Config
+    This ModuleScript is where you can preset the groups used by permissions and preset users to have specific permissions and groups assigned to them. The ModuleScript must return a table with any of the properties displayed on this page.
+]=]
+
+--[=[
+    @prop Groups {Group}
+    @within Config
+    Place Group objects in this table to allow group assigning to users.
+]=]
+
+--[=[
+    @interface UserPresetData
+    @within Config
+    .Permissions {string} -- A array of permission nodes
+    .Groups {string} -- An array of group names to be assigned to the user
+    The UserPresetData which will contain permission nodes and groups to be assigned to the user.
+]=]
+
+--[=[
+    @prop Users Dictionary<UserPresetData>
+    @within Config
+    A dictionary that contains Player.UserId in string format as the key and UserPresetData as it's value.
+]=]
+
+--[=[
+    @prop DefaultGroup Group
+    @within Config
+    The default group that will be assigned automatically to joining users.
+]=]
+
 --- @module lib/Types
 local Types = require(script:FindFirstChild("Types"));
 export type Dictionary<T> = Types.Dictionary<T>;
