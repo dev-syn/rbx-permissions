@@ -41,6 +41,13 @@ local Group: Types.Schema_Group = require(script:FindFirstChild("Group"));
 --[=[
     @class Permissions
     This class was designed to track permissions for a user or a group for granting access to certain commands and features inside your game.
+    ```md
+        # Notes
+
+            ## Definitions - permission group
+            - "permission node": This is a string which is represented as a permission that usually contains nodes(a literal '.')
+
+    ```
 ]=]
 local Permissions = {} :: Permissions;
 
@@ -51,9 +58,9 @@ local Permissions = {} :: Permissions;
 ]=]
 Permissions.Group = Group;
 
--- Map<Player,Group>
+-- Map<Player,{string}>
 --[=[
-    @prop _UserPermissions Map<Player,Group>
+    @prop _UserPermissions Map<Player,{string}>
     @within Permissions
     @private
     This internal property contains the individual user permissions.
@@ -194,14 +201,20 @@ function Permissions.RemoveUserGroup(plr: Player,group: Group)
     if groupIndex then table.remove(userGroups,groupIndex); end
 end
 
+local function isNodeNegated(node: string) : boolean
+    return (node:match("%s*%-.+") and true) or false;
+end
+
 --[=[
     @within Permissions
     @param plr Player
     @param permission string
-    This functions grants a user a permission.
+    This functions grants a user a permission node and will revoke the negated permission node if it exists.
 ]=]
 function Permissions.GrantPermission(plr: Player,permission: string)
     local userPermissions: {string} = Permissions._UserPermissions[plr];
+    -- Revoke negative permission nodes if you are trying to grant that permission
+    if not isNodeNegated(permission) then Permissions.RevokePermission(plr,"-"..permission); end
     if not table.find(userPermissions,permission) then table.insert(userPermissions,permission); end
 end
 
@@ -209,7 +222,7 @@ end
     @within Permissions
     @param plr Player
     @param permission string
-    This functions revokes a user from a permission.
+    This functions revokes a user from a permission node.
 ]=]
 function Permissions.RevokePermission(plr: Player,permission: string)
     local userPermissions: {string} = Permissions._UserPermissions[plr];
@@ -224,15 +237,21 @@ end
     @param plr Player
     @param permission string
     @return boolean
-    This function checks if a user has a specific permission node
+    This function checks if a user has a specific permission node, negated permission nodes take priority and when present in the users permissions it will return false.
 ]=]
 function Permissions.HasPermission(plr: Player,permission: string) : boolean
     local userPermissions = Permissions._UserPermissions[plr];
+    -- Check if the queried permission is negated
+    local isQueryNegated: boolean = isNodeNegated(permission);
+    if not isQueryNegated then
+        -- User has no permission if a negated permission is found
+        if table.find(userPermissions,"-"..permission) then return false; end
+    end
     -- Check if user has the permission
     local userPermIndex: number? = table.find(userPermissions,permission);
     if not userPermIndex then
-        -- If user has an asterisk then user contains all permissions
-        if table.find(userPermissions,"*") then return true; end
+        -- If user has an asterisk then user contains all permissions (only applies on non-negated permissions)
+        if not isQueryNegated and table.find(userPermissions,"*") then return true; end
         -- Check if the users groups has the permission
         for _,group: any in ipairs(Permissions._UserGroups[plr]) do
             if group:HasPermission(permission) then return true; end
