@@ -9,7 +9,7 @@
 ### Removed
 - Outdated test config
 - Changelog unnecessary tags
-
+- Require on the config in Permissions.Init()
 ## [0.1.0]
 ### Added
 - The initial required files to the repository
