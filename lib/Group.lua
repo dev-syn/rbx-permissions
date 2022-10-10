@@ -55,21 +55,8 @@ function Group.new(name: string,permissions: {string}?,inheritant: Group?) : Gro
     return setmetatable(self,Group) :: Group;
 end
 
---[=[
-    @within Group
-    @param permission -- The permission node that will be queried
-    @return boolean
-    This method queries if a permission node is in this group.
-]=]
-function Group.HasPermission(self: Group,permission: string) : boolean
-    local permIndex: number? = table.find(self._Permissions,permission);
-    if not permIndex then
-        -- If group has an asterisk then the group contains all permissions
-        if table.find(self._Permissions,"*") then return true; end
-        -- Check in the inheritant group
-        if self._Inheritant then return self._Inheritant:HasPermission(permission); end
-    end
-    return permIndex and true or false;
+local function isNodeNegated(node: string) : boolean
+    return (node:match("%s*%-.+") and true) or false;
 end
 
 --[=[
@@ -78,6 +65,9 @@ end
     This function grants a permission node to the group in which this function is called.
 ]=]
 function Group.GrantPermission(self: Group,permission: string)
+    local groupPerms: {string} = self._Permissions;
+    -- Revoke negated permission nodes if you are trying to grant that permission
+    if not isNodeNegated(permission) then Group.RevokePermission(self,"-"..permission); end
     if table.find(self._Permissions,permission) then return; end
     table.insert(self._Permissions,permission);
 end
@@ -90,6 +80,30 @@ end
 function Group.RevokePermission(self: Group,permission: string)
     local foundIndex: number? = table.find(self._Permissions,permission);
     if foundIndex then table.remove(self._Permissions,foundIndex); end
+end
+
+--[=[
+    @within Group
+    @param permission -- The permission node that will be queried
+    @return boolean
+    This method queries if a permission node is in this group.
+]=]
+function Group.HasPermission(self: Group,permission: string) : boolean
+    local groupPerms: {string} = self._Permissions;
+    -- Check if the queried permission is negated
+    local isQueryNegated: boolean = isNodeNegated(permission);
+    if not isQueryNegated then
+        -- Group has no permission if a negated permission is found
+        if table.find(groupPerms,"-"..permission) then return false; end
+    end
+    local permIndex: number? = table.find(groupPerms,permission);
+    if not permIndex then
+        -- If group has an asterisk then the group contains all permissions
+        if table.find(groupPerms,"*") then return true; end
+        -- Check in the inheritant group
+        if self._Inheritant then return self._Inheritant:HasPermission(permission); end
+    end
+    return permIndex and true or false;
 end
 
 return Group;
