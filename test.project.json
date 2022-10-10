@@ -4,7 +4,10 @@
     "$className": "DataModel",
 
     "ServerScriptService": {
-      "Permissions": {"$path": "lib"},
+      "Permissions": {
+        "$path": "lib",
+        "Dependencies": {"$path": "Packages"}
+      },
       "testRunner": {
         "$path": "Tests/testRunner.server.lua",
         "PermissionsConfig": {"$path": "Tests/PermissionsConfig.lua"}
