@@ -5,6 +5,7 @@
 - Permissions.IsUserInGroup() to see if a user is in a group
 - TestEZ for testing
 - Functionality for using negated permission nodes in Permissions & Group classes
+- Group.SetPrecedence() used to assign a group precedence over others
 - Internal function isNodeNegated() to check for negated permission nodes
 ### Changed
 - Permissions.Init() to take a table as a config rather then ModuleScript

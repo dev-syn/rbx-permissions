@@ -37,14 +37,14 @@ function Group.new(name: string,permissions: {string}?,inheritant: Group?) : Gro
         @prop _Inheritant Group?
         @within Group
         @private
-        The internal tracker of the inherited group if there is one.
+        The internal property of the inherited group if there is one.
     ]=]
     if inheritant then self._Inheritant = inheritant::Group; end
     --[=[
         @prop _Permissions {string}
         @within Group
         @private
-        The internal tracker of the permission node container.
+        The internal property of the permission node container.
     ]=]
     self._Permissions = {};
     if permissions then
@@ -52,7 +52,18 @@ function Group.new(name: string,permissions: {string}?,inheritant: Group?) : Gro
             self._Permissions[index] = permission;
         end
     end
+    --[=[
+        @prop _Precedence number
+        @within Group
+        @private
+        The internal property that tracks the groups order of precedence
+    ]=]
+    self._Precedence = -1;
     return setmetatable(self,Group) :: Group;
+end
+
+function Group.SetPrecedence(self: Group,precedence: number)
+    self._Precedence = precedence;
 end
 
 local function isNodeNegated(node: string) : boolean

@@ -5,15 +5,17 @@ export type Schema_Group = {
     __index: any,
 
     new: (name: string,permissions: {string}?,inheritant: Group?) -> Group,
-    HasPermission: (self: Group,permission: string) -> boolean,
+    SetPrecedence: (self: Group,precedence: number) -> (),
     GrantPermission: (self: Group,permission: string) -> (),
-    RevokePermission: (self: Group,permission: string) -> ()
+    RevokePermission: (self: Group,permission: string) -> (),
+    HasPermission: (self: Group,permission: string) -> boolean
 };
 export type Object_Group = {
     Name: string,
     _Inheritant: Group,
     _Permissions: {string},
-    _Prefix: string
+    _Prefix: string,
+    _Precedence: number
 };
 
 export type Group = Object_Group & Schema_Group;
@@ -27,6 +29,7 @@ export type Permissions = {
 
     Init: (permissionsConfig: Dictionary<any>?) -> Permissions,
     FindGroup: (name: string) -> Group,
+    FindHighestGroupPrecedence: (plr: Player) -> Group?,
     IsUserInGroup: (plr: Player,group: Group) -> boolean,
     SetUserGroup: (plr: Player,group: Group) -> (),
     RemoveUserGroup: (plr: Player,group: Group) -> (),
