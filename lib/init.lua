@@ -170,7 +170,7 @@ function Permissions.FindHighestGroupPrecedence(plr: Player) : Group?
     local userGroups: {Group} = Permissions._UserGroups[plr];
     local lowestPrecedence: number?,highestGroup: Group = nil,nil;
     for _,group: Group in ipairs(userGroups) do
-        if not lowestPrecedence then
+        if not lowestPrecedence and group._Precedence > -1 then
             lowestPrecedence = group._Precedence;
             highestGroup = group;
         elseif not (group._Precedence == -1) and group._Precedence < lowestPrecedence then
