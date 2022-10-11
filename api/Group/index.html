@@ -5,8 +5,8 @@
 <meta name="viewport" content="width=device-width,initial-scale=1">
 <meta name="generator" content="Docusaurus v2.0.0-beta.21">
 <title data-rh="true">Group | Permissions</title><meta data-rh="true" name="twitter:card" content="summary_large_image"><meta data-rh="true" property="og:url" content="https://dev-syn.github.io/rbx-permissions/api/Group"><meta data-rh="true" name="docusaurus_locale" content="en"><meta data-rh="true" name="docusaurus_tag" content="default"><meta data-rh="true" name="docsearch:language" content="en"><meta data-rh="true" name="docsearch:docusaurus_tag" content="default"><meta data-rh="true" property="og:title" content="Group | Permissions"><meta data-rh="true" name="description" content="This class is for creating groups and storing permissions within those groups."><meta data-rh="true" property="og:description" content="This class is for creating groups and storing permissions within those groups."><link data-rh="true" rel="canonical" href="https://dev-syn.github.io/rbx-permissions/api/Group"><link data-rh="true" rel="alternate" href="https://dev-syn.github.io/rbx-permissions/api/Group" hreflang="en"><link data-rh="true" rel="alternate" href="https://dev-syn.github.io/rbx-permissions/api/Group" hreflang="x-default"><link rel="stylesheet" href="/rbx-permissions/assets/css/styles.bc734c04.css">
-<link rel="preload" href="/rbx-permissions/assets/js/runtime~main.1fb78c0c.js" as="script">
-<link rel="preload" href="/rbx-permissions/assets/js/main.db48a0a0.js" as="script">
+<link rel="preload" href="/rbx-permissions/assets/js/runtime~main.77f0c7cd.js" as="script">
+<link rel="preload" href="/rbx-permissions/assets/js/main.3d9b76d2.js" as="script">
 </head>
 <body class="navigation-with-keyboard">
 <script>!function(){function e(e){document.documentElement.setAttribute("data-theme",e)}var t=function(){var e=null;try{e=localStorage.getItem("theme")}catch(e){}return e}();null!==t?e(t):window.matchMedia("(prefers-color-scheme: dark)").matches?e("dark"):(window.matchMedia("(prefers-color-scheme: light)").matches,e("light"))}()</script><div id="__docusaurus">
@@ -22,15 +22,21 @@
 <p>The group that will be inherited with it's permission nodes</p>
 </span></span></div></div><code>) → </code><code class="blue_P4bS"><a style="text-decoration:underline;color:inherit" href="/rbx-permissions/api/Group">Group</a></code></div><div>
 <p>Creates a new Group object.</p>
-</div><div class="divider_rE5g"></div><h3 class="anchor anchorWithStickyNavbar_LWe7" id="GrantPermission"><code style="text-decoration:none">GrantPermission</code><a class="hash-link" href="#GrantPermission" title="Direct link to heading">​</a></h3><div class="repositoryDetailsContainer_BPdw"><a class="sourceButton_sEho" href="https://github.com/dev-syn/rbx-permissions/blob/main/lib/Group.lua#L78"><div class="sourceButtonText_Vh0m">&lt;/&gt;</div></a></div><div class="memberString_GwaU"><code>Group<!-- -->.</code><code class="green_DgR4">GrantPermission</code><code>(</code><div class="inset_uKQm"><div><code>self<!-- -->: </code><code class="blue_P4bS"><a style="text-decoration:underline;color:inherit" href="/rbx-permissions/api/Group">Group</a></code><code>,</code></div><div><code>permission<!-- -->: </code><code class="blue_P4bS">string</code><span class="inlineDescription_G7Er">-- <span>
+</div><div class="divider_rE5g"></div><h3 class="anchor anchorWithStickyNavbar_LWe7" id="SetInheritant"><code style="text-decoration:none">SetInheritant</code><a class="hash-link" href="#SetInheritant" title="Direct link to heading">​</a></h3><div class="repositoryDetailsContainer_BPdw"><a class="sourceButton_sEho" href="https://github.com/dev-syn/rbx-permissions/blob/main/lib/Group.lua#L70"><div class="sourceButtonText_Vh0m">&lt;/&gt;</div></a></div><div class="memberString_GwaU"><code>Group<!-- -->.</code><code class="green_DgR4">SetInheritant</code><code>(</code><div class="inset_uKQm"><div><code>self<!-- -->: </code><code class="blue_P4bS"><a style="text-decoration:underline;color:inherit" href="/rbx-permissions/api/Group">Group</a></code><code>,</code></div><div><code>inheritant<!-- -->: </code><code class="blue_P4bS"><a style="text-decoration:underline;color:inherit" href="/rbx-permissions/api/Group">Group</a></code><span class="inlineDescription_G7Er">-- <span>
+<p>The groups permissions that would be inherited</p>
+</span></span></div></div><code>) → </code><code class="blue_P4bS"><a style="text-decoration:underline;color:inherit" href="/rbx-permissions/api/Group">Group</a></code></div><div>
+<p>This method will set the inheritant that will have it's permissions inherited</p>
+</div><div class="divider_rE5g"></div><h3 class="anchor anchorWithStickyNavbar_LWe7" id="SetPrecedence"><code style="text-decoration:none">SetPrecedence</code><a class="hash-link" href="#SetPrecedence" title="Direct link to heading">​</a></h3><div class="repositoryDetailsContainer_BPdw"><a class="sourceButton_sEho" href="https://github.com/dev-syn/rbx-permissions/blob/main/lib/Group.lua#L79"><div class="sourceButtonText_Vh0m">&lt;/&gt;</div></a></div><div class="memberString_GwaU"><code>Group<!-- -->.</code><code class="green_DgR4">SetPrecedence</code><code>(</code><div class="inset_uKQm"><div><code>self<!-- -->: </code><code class="blue_P4bS"><a style="text-decoration:underline;color:inherit" href="/rbx-permissions/api/Group">Group</a></code><code>,</code></div><div><code>precedence<!-- -->: </code><code class="blue_P4bS">number</code></div></div><code>) → </code><code class="blue_P4bS"><a style="text-decoration:underline;color:inherit" href="/rbx-permissions/api/Group">Group</a></code></div><div>
+<p>This method will set this groups precedence</p>
+</div><div class="divider_rE5g"></div><h3 class="anchor anchorWithStickyNavbar_LWe7" id="GrantPermission"><code style="text-decoration:none">GrantPermission</code><a class="hash-link" href="#GrantPermission" title="Direct link to heading">​</a></h3><div class="repositoryDetailsContainer_BPdw"><a class="sourceButton_sEho" href="https://github.com/dev-syn/rbx-permissions/blob/main/lib/Group.lua#L93"><div class="sourceButtonText_Vh0m">&lt;/&gt;</div></a></div><div class="memberString_GwaU"><code>Group<!-- -->.</code><code class="green_DgR4">GrantPermission</code><code>(</code><div class="inset_uKQm"><div><code>self<!-- -->: </code><code class="blue_P4bS"><a style="text-decoration:underline;color:inherit" href="/rbx-permissions/api/Group">Group</a></code><code>,</code></div><div><code>permission<!-- -->: </code><code class="blue_P4bS">string</code><span class="inlineDescription_G7Er">-- <span>
 <p>The permission node that will be granted to this group</p>
 </span></span></div></div><code>) → </code><code>(</code><code>)</code></div><div>
-<p>This function grants a permission node to the group in which this function is called.</p>
-</div><div class="divider_rE5g"></div><h3 class="anchor anchorWithStickyNavbar_LWe7" id="RevokePermission"><code style="text-decoration:none">RevokePermission</code><a class="hash-link" href="#RevokePermission" title="Direct link to heading">​</a></h3><div class="repositoryDetailsContainer_BPdw"><a class="sourceButton_sEho" href="https://github.com/dev-syn/rbx-permissions/blob/main/lib/Group.lua#L91"><div class="sourceButtonText_Vh0m">&lt;/&gt;</div></a></div><div class="memberString_GwaU"><code>Group<!-- -->.</code><code class="green_DgR4">RevokePermission</code><code>(</code><div class="inset_uKQm"><div><code>self<!-- -->: </code><code class="blue_P4bS"><a style="text-decoration:underline;color:inherit" href="/rbx-permissions/api/Group">Group</a></code><code>,</code></div><div><code>permission<!-- -->: </code><code class="blue_P4bS">string</code><span class="inlineDescription_G7Er">-- <span>
+<p>This method grants a permission node to the group</p>
+</div><div class="divider_rE5g"></div><h3 class="anchor anchorWithStickyNavbar_LWe7" id="RevokePermission"><code style="text-decoration:none">RevokePermission</code><a class="hash-link" href="#RevokePermission" title="Direct link to heading">​</a></h3><div class="repositoryDetailsContainer_BPdw"><a class="sourceButton_sEho" href="https://github.com/dev-syn/rbx-permissions/blob/main/lib/Group.lua#L106"><div class="sourceButtonText_Vh0m">&lt;/&gt;</div></a></div><div class="memberString_GwaU"><code>Group<!-- -->.</code><code class="green_DgR4">RevokePermission</code><code>(</code><div class="inset_uKQm"><div><code>self<!-- -->: </code><code class="blue_P4bS"><a style="text-decoration:underline;color:inherit" href="/rbx-permissions/api/Group">Group</a></code><code>,</code></div><div><code>permission<!-- -->: </code><code class="blue_P4bS">string</code><span class="inlineDescription_G7Er">-- <span>
 <p>The permission node that will be granted to this group</p>
 </span></span></div></div><code>) → </code><code>(</code><code>)</code></div><div>
-<p>This function revokes a permission node in the group that this function was called.</p>
-</div><div class="divider_rE5g"></div><h3 class="anchor anchorWithStickyNavbar_LWe7" id="HasPermission"><code style="text-decoration:none">HasPermission</code><a class="hash-link" href="#HasPermission" title="Direct link to heading">​</a></h3><div class="repositoryDetailsContainer_BPdw"><a class="sourceButton_sEho" href="https://github.com/dev-syn/rbx-permissions/blob/main/lib/Group.lua#L102"><div class="sourceButtonText_Vh0m">&lt;/&gt;</div></a></div><div class="memberString_GwaU"><code>Group<!-- -->.</code><code class="green_DgR4">HasPermission</code><code>(</code><div class="inset_uKQm"><div><code>self<!-- -->: </code><code class="blue_P4bS"><a style="text-decoration:underline;color:inherit" href="/rbx-permissions/api/Group">Group</a></code><code>,</code></div><div><code>permission<!-- -->: </code><code class="blue_P4bS">string</code><span class="inlineDescription_G7Er">-- <span>
+<p>This method revokes a permission node from the group</p>
+</div><div class="divider_rE5g"></div><h3 class="anchor anchorWithStickyNavbar_LWe7" id="HasPermission"><code style="text-decoration:none">HasPermission</code><a class="hash-link" href="#HasPermission" title="Direct link to heading">​</a></h3><div class="repositoryDetailsContainer_BPdw"><a class="sourceButton_sEho" href="https://github.com/dev-syn/rbx-permissions/blob/main/lib/Group.lua#L117"><div class="sourceButtonText_Vh0m">&lt;/&gt;</div></a></div><div class="memberString_GwaU"><code>Group<!-- -->.</code><code class="green_DgR4">HasPermission</code><code>(</code><div class="inset_uKQm"><div><code>self<!-- -->: </code><code class="blue_P4bS"><a style="text-decoration:underline;color:inherit" href="/rbx-permissions/api/Group">Group</a></code><code>,</code></div><div><code>permission<!-- -->: </code><code class="blue_P4bS">string</code><span class="inlineDescription_G7Er">-- <span>
 <p>The permission node that will be queried</p>
 </span></span></div></div><code>) → </code><code class="blue_P4bS">boolean</code></div><div>
 <p>This method queries if a permission node is in this group, negated permission nodes take priority and when present in the groups permissions it will return false.</p>
@@ -69,8 +75,62 @@
             }
         },
         {
+            &quot;name&quot;: &quot;SetInheritant&quot;,
+            &quot;desc&quot;: &quot;This method will set the inheritant that will have it&#x27;s permissions inherited&quot;,
+            &quot;params&quot;: [
+                {
+                    &quot;name&quot;: &quot;self&quot;,
+                    &quot;desc&quot;: &quot;&quot;,
+                    &quot;lua_type&quot;: &quot;Group&quot;
+                },
+                {
+                    &quot;name&quot;: &quot;inheritant&quot;,
+                    &quot;desc&quot;: &quot;The groups permissions that would be inherited&quot;,
+                    &quot;lua_type&quot;: &quot;Group&quot;
+                }
+            ],
+            &quot;returns&quot;: [
+                {
+                    &quot;desc&quot;: &quot;&quot;,
+                    &quot;lua_type&quot;: &quot;Group\r\n&quot;
+                }
+            ],
+            &quot;function_type&quot;: &quot;static&quot;,
+            &quot;source&quot;: {
+                &quot;line&quot;: 70,
+                &quot;path&quot;: &quot;lib/Group.lua&quot;
+            }
+        },
+        {
+            &quot;name&quot;: &quot;SetPrecedence&quot;,
+            &quot;desc&quot;: &quot;This method will set this groups precedence&quot;,
+            &quot;params&quot;: [
+                {
+                    &quot;name&quot;: &quot;self&quot;,
+                    &quot;desc&quot;: &quot;&quot;,
+                    &quot;lua_type&quot;: &quot;Group&quot;
+                },
+                {
+                    &quot;name&quot;: &quot;precedence&quot;,
+                    &quot;desc&quot;: &quot;&quot;,
+                    &quot;lua_type&quot;: &quot;number&quot;
+                }
+            ],
+            &quot;returns&quot;: [
+                {
+                    &quot;desc&quot;: &quot;&quot;,
+                    &quot;lua_type&quot;: &quot;Group\r\n&quot;
+                }
+            ],
+            &quot;function_type&quot;: &quot;static&quot;,
+            &quot;source&quot;: {
+                &quot;line&quot;: 79,
+                &quot;path&quot;: &quot;lib/Group.lua&quot;
+            }
+        },
+        {
             &quot;name&quot;: &quot;GrantPermission&quot;,
-            &quot;desc&quot;: &quot;This function grants a permission node to the group in which this function is called.&quot;,
+            &quot;desc&quot;: &quot;This method grants a permission node to the group&quot;,
             &quot;params&quot;: [
                 {
                     &quot;name&quot;: &quot;self&quot;,
@@ -86,13 +146,13 @@
             &quot;returns&quot;: [],
             &quot;function_type&quot;: &quot;static&quot;,
             &quot;source&quot;: {
-                &quot;line&quot;: 78,
+                &quot;line&quot;: 93,
                 &quot;path&quot;: &quot;lib/Group.lua&quot;
             }
         },
         {
             &quot;name&quot;: &quot;RevokePermission&quot;,
-            &quot;desc&quot;: &quot;This function revokes a permission node in the group that this function was called.&quot;,
+            &quot;desc&quot;: &quot;This method revokes a permission node from the group&quot;,
             &quot;params&quot;: [
                 {
                     &quot;name&quot;: &quot;self&quot;,
@@ -108,7 +168,7 @@
             &quot;returns&quot;: [],
             &quot;function_type&quot;: &quot;static&quot;,
             &quot;source&quot;: {
-                &quot;line&quot;: 91,
+                &quot;line&quot;: 106,
                 &quot;path&quot;: &quot;lib/Group.lua&quot;
             }
         },
@@ -135,7 +195,7 @@
             ],
             &quot;function_type&quot;: &quot;static&quot;,
             &quot;source&quot;: {
-                &quot;line&quot;: 102,
+                &quot;line&quot;: 117,
                 &quot;path&quot;: &quot;lib/Group.lua&quot;
             }
         }
@@ -198,8 +258,8 @@
         &quot;line&quot;: 11,
         &quot;path&quot;: &quot;lib/Group.lua&quot;
     }
-}</pre></details></div><div class="col col--3"><div class="tableOfContents_bqdL thin-scrollbar"><ul class="table-of-contents table-of-contents__left-border"><li><a href="#types" class="table-of-contents__link toc-highlight">Types</a></li><li><a href="#properties" class="table-of-contents__link toc-highlight">Properties</a><ul><li><a href="#Name" class="table-of-contents__link toc-highlight">Name</a></li></ul></li><li><a href="#functions" class="table-of-contents__link toc-highlight">Functions</a><ul><li><a href="#GrantPermission" class="table-of-contents__link toc-highlight">.GrantPermission</a></li><li><a href="#HasPermission" class="table-of-contents__link toc-highlight">.HasPermission</a></li><li><a href="#new" class="table-of-contents__link toc-highlight">.new</a></li><li><a href="#RevokePermission" class="table-of-contents__link toc-highlight">.RevokePermission</a></li></ul></li></ul></div></div></div></div></main></div></div><footer class="footer footer--dark"><div class="container container-fluid"><div class="footer__bottom text--center"><div class="footer__copyright">Copyright © 2022 dev-syn. Built with Moonwave and Docusaurus.</div></div></div></footer></div>
-<script src="/rbx-permissions/assets/js/runtime~main.1fb78c0c.js"></script>
-<script src="/rbx-permissions/assets/js/main.db48a0a0.js"></script>
+}</pre></details></div><div class="col col--3"><div class="tableOfContents_bqdL thin-scrollbar"><ul class="table-of-contents table-of-contents__left-border"><li><a href="#types" class="table-of-contents__link toc-highlight">Types</a></li><li><a href="#properties" class="table-of-contents__link toc-highlight">Properties</a><ul><li><a href="#Name" class="table-of-contents__link toc-highlight">Name</a></li></ul></li><li><a href="#functions" class="table-of-contents__link toc-highlight">Functions</a><ul><li><a href="#GrantPermission" class="table-of-contents__link toc-highlight">.GrantPermission</a></li><li><a href="#HasPermission" class="table-of-contents__link toc-highlight">.HasPermission</a></li><li><a href="#new" class="table-of-contents__link toc-highlight">.new</a></li><li><a href="#RevokePermission" class="table-of-contents__link toc-highlight">.RevokePermission</a></li><li><a href="#SetInheritant" class="table-of-contents__link toc-highlight">.SetInheritant</a></li><li><a href="#SetPrecedence" class="table-of-contents__link toc-highlight">.SetPrecedence</a></li></ul></li></ul></div></div></div></div></main></div></div><footer class="footer footer--dark"><div class="container container-fluid"><div class="footer__bottom text--center"><div class="footer__copyright">Copyright © 2022 dev-syn. Built with Moonwave and Docusaurus.</div></div></div></footer></div>
+<script src="/rbx-permissions/assets/js/runtime~main.77f0c7cd.js"></script>
+<script src="/rbx-permissions/assets/js/main.3d9b76d2.js"></script>
 </body>
 </html>
