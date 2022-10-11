@@ -5,7 +5,8 @@ export type Schema_Group = {
     __index: any,
 
     new: (name: string,permissions: {string}?,inheritant: Group?) -> Group,
-    SetPrecedence: (self: Group,precedence: number) -> (),
+    SetInheritant: (self: Group,inheritant: Group) -> Group,
+    SetPrecedence: (self: Group,precedence: number) -> Group,
     GrantPermission: (self: Group,permission: string) -> (),
     RevokePermission: (self: Group,permission: string) -> (),
     HasPermission: (self: Group,permission: string) -> boolean

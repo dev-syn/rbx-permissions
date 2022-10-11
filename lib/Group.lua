@@ -62,8 +62,23 @@ function Group.new(name: string,permissions: {string}?,inheritant: Group?) : Gro
     return setmetatable(self,Group) :: Group;
 end
 
-function Group.SetPrecedence(self: Group,precedence: number)
+--[=[
+    @within Group
+    @param inheritant Group -- The groups permissions that would be inherited
+    This method will set the inheritant that will have it's permissions inherited
+]=]
+function Group.SetInheritant(self: Group,inheritant: Group) : Group
+    self._Inheritant = inheritant;
+    return self;
+end
+
+--[=[
+    @within Group
+    This method will set this groups precedence
+]=]
+function Group.SetPrecedence(self: Group,precedence: number) : Group
     self._Precedence = precedence;
+    return self;
 end
 
 local function isNodeNegated(node: string) : boolean
@@ -73,7 +88,7 @@ end
 --[=[
     @within Group
     @param permission string -- The permission node that will be granted to this group
-    This function grants a permission node to the group in which this function is called.
+    This method grants a permission node to the group
 ]=]
 function Group.GrantPermission(self: Group,permission: string)
     local groupPerms: {string} = self._Permissions;
@@ -86,7 +101,7 @@ end
 --[=[
     @within Group
     @param permission string -- The permission node that will be granted to this group
-    This function revokes a permission node in the group that this function was called.
+    This method revokes a permission node from the group
 ]=]
 function Group.RevokePermission(self: Group,permission: string)
     local foundIndex: number? = table.find(self._Permissions,permission);
