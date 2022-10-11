@@ -1,4 +1,5 @@
 {
     "name": "permissions",
+    "globIgnorePaths": ["**/*.spec.lua"],
     "tree": {"$path": "lib"}
 }

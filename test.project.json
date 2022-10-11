@@ -8,10 +8,7 @@
         "$path": "lib",
         "Dependencies": {"$path": "Packages"}
       },
-      "testRunner": {
-        "$path": "Tests/testRunner.server.lua",
-        "PermissionsConfig": {"$path": "Tests/PermissionsConfig.lua"}
-      }
+      "testRunner": {"$path": "Tests/testRunner.server.lua"}
     }
   }
 }
