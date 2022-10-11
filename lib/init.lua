@@ -66,7 +66,7 @@ Permissions._UserPermissions = {};
 
 -- Map<Player,Group>
 --[=[
-    @prop _UserGroups Map<Player,Group>
+    @prop _UserGroups Map<Player,{Group}>
     @within Permissions
     @private
     This internal property contains the individual user groups.
@@ -160,6 +160,25 @@ end
 ]=]
 function Permissions.FindGroup(name: string) : Group
     return Permissions._Groups[name];
+end
+
+--[=[
+    @within Permissions
+    This method is for querying the users groups for the highest precedence returning that group.
+]=]
+function Permissions.FindHighestGroupPrecedence(plr: Player) : Group?
+    local userGroups: {Group} = Permissions._UserGroups[plr];
+    local lowestPrecedence: number?,highestGroup: Group = nil,nil;
+    for _,group: Group in ipairs(userGroups) do
+        if not lowestPrecedence then
+            lowestPrecedence = group._Precedence;
+            highestGroup = group;
+        elseif not (group._Precedence == -1) and group._Precedence < lowestPrecedence then
+            lowestPrecedence = group._Precedence;
+            highestGroup = group;
+        end
+    end
+    return highestGroup;
 end
 
 --[=[
