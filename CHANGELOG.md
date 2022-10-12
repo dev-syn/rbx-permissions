@@ -1,6 +1,8 @@
 # Changelog
 
 ## [Unreleased]
+
+## [0.2.0]
 ### Added
 - Permissions.IsUserInGroup() to see if a user is in a group
 - TestEZ for testing
@@ -16,6 +18,7 @@
 - Outdated test config
 - Changelog unnecessary tags
 - Require on the config in Permissions.Init()
+
 ## [0.1.0]
 ### Added
 - The initial required files to the repository
