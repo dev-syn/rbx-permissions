@@ -3,3 +3,5 @@ Packages/_Index
 /build
 /*.rbxlx
 **/*.lock
+
+/sourcemap.json
