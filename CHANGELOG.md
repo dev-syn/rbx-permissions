@@ -11,6 +11,7 @@
 - Group.SetInheritant() used to "inherit" another groups permissions
 - Permissions.FindHighestGroupPrecedence() used to return the highest group precedence
 - Internal function isNodeNegated() to check for negated permission nodes
+- TextStyling for styling group prefixes
 ### Changed
 - Permissions.Init() to take a table as a config rather then ModuleScript
 - Moonwave documentation improvements/typos
