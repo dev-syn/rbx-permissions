@@ -1,5 +1,22 @@
 {
     "name": "permissions",
-    "globIgnorePaths": ["**/*.spec.lua"],
-    "tree": {"$path": "lib"}
+    "globIgnorePaths": [
+        "Packages/_Index/roblox_testez@0.4.1",
+        "Packages/TestEZ.lua",
+        "**/*.spec.lua"
+    ],
+    "tree": {
+        "$path": "lib",
+        "Dependencies": {
+            "$className": "Folder",
+            "_Index": {
+                "$className": "Folder",
+
+                "dev-syn_text-styling@0.1.0": {"$path": "Packages/_Index/dev-syn_text-styling@0.1.0"},
+                "roblox_testez@0.4.1": {"$path": "Packages/_Index/roblox_testez@0.4.1"}
+            },
+            "TextStyling": {"$path": "Packages/TextStyling.lua"},
+            "TestEZ": {"$path": "Packages/TestEZ.lua"}
+        }
+    }
 }
