@@ -1,12 +1,77 @@
 --[=[
     @class Config
-    This ModuleScript is where you can preset the groups used by permissions and preset users to have specific permissions and groups assigned to them. The ModuleScript must return a table with any of the properties displayed on this page.
+
+    This class was designed to implement permissions & groups that get assigned to users used to restrict certain features across your game.
+
+    ## Configuration Example
+    ```lua
+    local Permissions = require(PermissionsModule);
+    type Group = Permissions.Group;
+
+    -- The Group class
+    local Group: Permissions.Schema_Group = Permissions.Group;
+
+    -- Any groups we will reuse in the Config we will need to store in a variable
+    local defaultGroup: Group = Group.new("Default",{"example.default"});
+    local example1: Group = Group.new("Example1","example.permission1");
+
+    return {
+        Groups = {
+            defaultGroup -- The default group also must still be added
+
+            -- "Example 1" would contain permission nodes example.permission1
+            example1,
+
+            -- "Example 2" would inherit example1 permission nodes & example.permission2
+            Group.new("Example2","example.permission2",example1),
+
+            -- "Example 3" would have the highest precedence a group could have
+            -- "Example 3" would have the inherited example.permission1 permission node
+            Group.new("Example3"):SetPrecedence(0):SetInheritant(example1),
+
+            -- This will be used for later
+            Group.new("Developer","example.superpermission",defaultGroup),
+        },
+        Users = {
+            ["Player.UserId"] = {
+            --[[
+                You can place permission nodes inside Permissions to
+                automatically assign those permissions to that user.
+            --]]
+                Permissions = {"example.only_I_have_this_permission"},
+
+            --[[
+                You can place group names inside of Groups to have
+                the user automatically be assigned to those Groups.
+
+                This user would automatically be in the "Example 2" group
+            --]]
+                Groups = {"Example2"}
+            },
+            ["ownerid"] = {
+                -- Optionally grant this specific user all permissions
+                Permissions = {"*"},
+
+                -- Assign this user to the Developer group we made earlier
+                Groups = {"Developer"}
+            }
+        },
+        DefaultGroup = defaultGroup
+    }
+    ```
+
+    :::note
+
+    >You still have to add the Default Group to the [Config.Groups] table.
+
+    :::
 ]=]
 
 --[=[
     @prop Groups {Group}
     @within Config
-    Place Group objects in this table to allow group assigning to users.
+
+    This is an array of [Group] objects that represent all the groups that [Permissions] should be aware of.
 ]=]
 
 --[=[
@@ -14,19 +79,22 @@
     @within Config
     .Permissions {string} -- A array of permission nodes
     .Groups {string} -- An array of group names to be assigned to the user
-    The UserPresetData which will contain permission nodes and groups to be assigned to the user.
+
+    The UserPresetData is a table that contains permission nodes and [Group] names that will be assigned to the user.
 ]=]
 
 --[=[
     @prop Users Dictionary<UserPresetData>
     @within Config
-    A dictionary that contains Player.UserId in string format as the key and UserPresetData as it's value.
+
+    A dictionary that which contains [Player.UserId] as the keys and [Permissions.UserPresetData] as the values.
 ]=]
 
 --[=[
     @prop DefaultGroup Group
     @within Config
-    The default group that will be assigned automatically to joining users.
+
+    The default group is a [Group] that is automatically assigned to joining users.
 ]=]
 
 --- @module lib/Types
@@ -35,50 +103,58 @@ export type Dictionary<T> = Types.Dictionary<T>;
 export type Group = Types.Group;
 export type Permissions = Types.Permissions;
 
---- @module lib/Group
-local Group: Types.Schema_Group = require(script:FindFirstChild("Group"));
-
 --[=[
     @class Permissions
     This class was designed to track permissions for a user or a group for granting access to certain commands and features inside your game.
+
     # Definitions
-    - "&lt;example&gt;": Any text within &lt; &gt; is a mandatory placeholder
-    - "&lt; ?: example &gt;": Any text within &lt; ?: &gt; is a optional placeholder and is not required to be used
-    - "permission node": This is a string which contains a &lt;category&gt;.&lt;permission&gt;.&lt; ?: subperm&gt; format
+    - "&lt;example&gt;": Any text within `< >` is a mandatory placeholder.
+    - "&lt;?: example &gt;": Any text within `<?: >` is a optional placeholder and is not required to be used.
+    - "permission node": This is a string which contains a `<category>.<permission>.<?: subperm>` format.
+
+    :::note
+
+    >The Permissions module is recommended to be placed in [ServerScriptService].
+
+    :::
 ]=]
 local Permissions = {} :: Permissions;
 
+--- @module lib/Group
+local Group: Types.Schema_Group = require(script:FindFirstChild("Group"));
 --[=[
     @prop Group Schema_Group
     @within Permissions
-    This property contains the Group class
+    @tag reference
+
+    This property stores a reference to the [Group] class.
 ]=]
 Permissions.Group = Group;
 
--- Map<Player,{string}>
 --[=[
     @prop _UserPermissions Map<Player,{string}>
     @within Permissions
     @private
+
     This internal property contains the individual user permissions.
 ]=]
 Permissions._UserPermissions = {};
 
--- Map<Player,Group>
 --[=[
     @prop _UserGroups Map<Player,{Group}>
     @within Permissions
     @private
+
     This internal property contains the individual user groups.
 ]=]
 Permissions._UserGroups = {};
 
--- Dictionary<Group>
 --[=[
     @prop _Groups Dictionary<Group>
     @within Permissions
     @private
-    This internal property contains the Permissions reference to the groups
+
+    This internal property stores a Dictionary of [Group] names & objects that [Permissions] is aware of.
 ]=]
 Permissions._Groups = {};
 
@@ -89,30 +165,28 @@ local function initUser(plr: Player)
     end
     if not Permissions._UserGroups[plr] then
         Permissions._UserGroups[plr] = {};
-
-        -- TODO: Add player to default group
+        -- Add player to default group
         local defaultGroup = PermissionsConfig.DefaultGroup;
-        if defaultGroup then
-            Permissions.SetUserGroup(plr,defaultGroup);
-        end
+        if defaultGroup then Permissions.SetUserGroup(plr,defaultGroup); end
         -- Iterate through preset user data
         if PermissionsConfig and PermissionsConfig.Users then
-            local presetUserData = PermissionsConfig.Users[tostring(plr.UserId)];
-            if typeof(presetUserData) == "table" then
+            local presetUserData: Types.PresetUserData? = PermissionsConfig.Users[tostring(plr.UserId)];
+            if presetUserData then
 
-                -- Add preset user permissions
-                local presetPermissions = presetUserData.Permissions;
+               -- Add preset user permissions
+                local presetPermissions: {string}? = presetUserData.Permissions;
                 if presetPermissions then
                     for _,permission: string in ipairs(presetPermissions) do
                         Permissions.GrantPermission(plr,permission);
                     end
                 end
+
                 -- Add preset groups to user
-                local presetGroupNames: {string} = presetUserData.Groups;
+                local presetGroupNames: {string}? = presetUserData.Groups;
                 if presetGroupNames then
                     for _,groupName: string in ipairs(presetGroupNames) do
-                        local group: Group = Permissions.FindGroup(groupName);
-                        if group then Permissions.SetUserGroup(plr,group); end
+                        local group: Group? = Permissions.FindGroup(groupName);
+                        if group then Permissions.SetUserGroup(plr,group::Group); end
                     end
                 end
             end
@@ -123,10 +197,17 @@ end
 local isInitialized: boolean = false;
 --[=[
     @within Permissions
-    @param permissionsConfig Dictionary<any>? -- The config used for setting up and storing the preset permissions & groups
-    This method **Must** be called before using any other functions inside Permissions.
+    @param permissionsConfig Config? -- The config used for setting up and storing the preset permissions & groups
+
+    This function initializes [Permissions] and the preset user permissions & groups.
+
+    :::danger
+
+    >Failure to call this function before using other functions will result in [Permissions] being broken.
+
+    :::
 ]=]
-function Permissions.Init(permissionsConfig: Dictionary<any>?) : Permissions
+function Permissions.Init(permissionsConfig: Types.Config?) : Permissions
     if isInitialized then return Permissions; end
     if typeof(permissionsConfig) == "table" then PermissionsConfig = permissionsConfig end
 
@@ -156,24 +237,30 @@ end
 --[=[
     @within Permissions
     @param name string -- The name of the group to query.
-    @return Group -- The group that was found or nil if no group was found.
+    @return Group? -- The group that was found or nil if no group was found.
+
+    This function is used to find a [Group] object by it's name.
 ]=]
-function Permissions.FindGroup(name: string) : Group
-    return Permissions._Groups[name];
+function Permissions.FindGroup(name: string) : Group?
+    return Permissions._Groups[name] or nil;
 end
 
 --[=[
     @within Permissions
-    This method is for querying the users groups for the highest precedence returning that group.
+
+    This method is for querying the user groups for the highest
+    precedence returning that group.
 ]=]
 function Permissions.FindHighestGroupPrecedence(plr: Player) : Group?
     local userGroups: {Group} = Permissions._UserGroups[plr];
     local lowestPrecedence: number?,highestGroup: Group = nil,nil;
     for _,group: Group in ipairs(userGroups) do
-        if not lowestPrecedence and group._Precedence > -1 then
+        if group._Precedence == -1 then continue; end
+
+        if not lowestPrecedence then
             lowestPrecedence = group._Precedence;
             highestGroup = group;
-        elseif not (group._Precedence == -1) and group._Precedence < lowestPrecedence then
+        elseif group._Precedence < lowestPrecedence then
             lowestPrecedence = group._Precedence;
             highestGroup = group;
         end
@@ -183,6 +270,7 @@ end
 
 --[=[
     @within Permissions
+
     This method is for checking if a user is in a specific group returning true if they are otherwise false
 ]=]
 function Permissions.IsUserInGroup(plr: Player,group: Group) : boolean
@@ -193,7 +281,8 @@ end
     @within Permissions
     @param plr Player
     @param group Group
-    This function is used to set a group to a user(player)
+
+    This function is used to set a group to a user.
 ]=]
 function Permissions.SetUserGroup(plr: Player,group: Group)
     local userGroups: {Group} = Permissions._UserGroups[plr];
@@ -208,7 +297,8 @@ end
     @within Permissions
     @param plr Player
     @param group Group
-    This function is used to remove a group from a user(player).
+
+    This function is used to remove a group from a user.
 ]=]
 function Permissions.RemoveUserGroup(plr: Player,group: Group)
     local userGroups: {Group} = Permissions._UserGroups[plr];
@@ -225,9 +315,19 @@ end
     @within Permissions
     @param plr Player
     @param permission string
-    This functions grants a user a permission node and will revoke the negated permission node if it exists.
+
+    This functions grants a user a permission node.
+
+    :::note
+
+    If you grant a user a permission node and that user had a negated permission node it will revoke the negated permission.
+
+    :::
 ]=]
 function Permissions.GrantPermission(plr: Player,permission: string)
+    -- Checks if the permission is a permission node
+    permission = permission:match("%-?%w+%.%w+%.?%w*");
+    if not permission then return; end
     local userPermissions: {string} = Permissions._UserPermissions[plr];
     -- Revoke negated permission nodes if you are trying to grant that permission
     if not isNodeNegated(permission) then Permissions.RevokePermission(plr,"-"..permission); end
@@ -238,6 +338,7 @@ end
     @within Permissions
     @param plr Player
     @param permission string
+
     This functions revokes a user from a permission node.
 ]=]
 function Permissions.RevokePermission(plr: Player,permission: string)
@@ -253,7 +354,10 @@ end
     @param plr Player
     @param permission string
     @return boolean
-    This function checks if a user has a specific permission node, negated permission nodes take priority and when present in the users permissions it will return false.
+
+    This function checks if a user has a specific permission node.
+    Negated permission nodes take priority, and when present in
+    the user's permissions, this function will return false.
 ]=]
 function Permissions.HasPermission(plr: Player,permission: string) : boolean
     local userPermissions = Permissions._UserPermissions[plr];
