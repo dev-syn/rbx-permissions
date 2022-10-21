@@ -6,66 +6,93 @@ export type Group = Types.Group;
 local Group = {} :: Types.Schema_Group;
 --[=[
     @class Group
-    This class is for creating groups and storing permissions within those groups.
+
+    This class was designed for creating groups and storing permissions within those groups.
 ]=]
 Group.__index = Group;
 
 --[=[
     @within Group
-    @param name string -- The name that will be for this group
-    @param permissions {string}? -- A table of permission nodes or nil
-    @param inheritant Group? -- The group that will be inherited with it's permission nodes
+    @param permissions {string}? -- The permission nodes that the group will contain
+    @param inheritant Group? -- The group that will be inherited
     @return Group
-    Creates a new Group object.
+
+    This function creates a new [Group] object.
 ]=]
 function Group.new(name: string,permissions: {string}?,inheritant: Group?) : Group
     local self = {} :: Types.Object_Group;
     --[=[
         @prop Name string
         @within Group
-        The name of the group.
+        @tag object-prop
+
+        This is a property stores the name of the [Group].
     ]=]
     self.Name = name;
+
     --[=[
         @prop _Prefix string
         @within Group
         @private
-        The internal prefix of this group.
+        @tag object-prop
+
+        This is a internal property that stores the prefix of this [Group].
     ]=]
     self._Prefix = "";
+
     --[=[
         @prop _Inheritant Group?
         @within Group
         @private
-        The internal property of the inherited group if there is one.
+        @tag object-prop
+
+        This is a internal property that stores the inherited group if there is one.
     ]=]
     if inheritant then self._Inheritant = inheritant::Group; end
+
     --[=[
         @prop _Permissions {string}
         @within Group
         @private
-        The internal property of the permission node container.
+        @tag object-prop
+
+        This is a internal property that stores the permission nodes of this [Group].
     ]=]
     self._Permissions = {};
     if permissions then
         for index: number,permission: string in ipairs(permissions) do
-            self._Permissions[index] = permission;
+            if permission:match("%-?%w+%.%w+%.?%w*") then
+                self._Permissions[index] = permission;
+            end
         end
     end
+
     --[=[
         @prop _Precedence number
         @within Group
         @private
-        The internal property that tracks the groups order of precedence
+        @tag object-prop
+
+        This is a internal property that stores the order of precedence of this [Group].
+
+        :::note
+
+        >The [Group._Precendence] can be -1 which will ignore it from being queried in [Permissions.FindHighestGroupPrecedence]
+
+        :::
     ]=]
     self._Precedence = -1;
     return setmetatable(self,Group) :: Group;
 end
 
 --[=[
+    @method SetInheritant
     @within Group
-    @param inheritant Group -- The groups permissions that would be inherited
-    This method will set the inheritant that will have it's permissions inherited
+    @param inheritant Group -- The group that will be inherited
+    @return Group -- The group object is returned for chaining
+    @tag chainable
+
+    This method will set this [Group._Inheritant] to the target [Group] and will inherit that groups permissions.
 ]=]
 function Group.SetInheritant(self: Group,inheritant: Group) : Group
     self._Inheritant = inheritant;
@@ -73,11 +100,30 @@ function Group.SetInheritant(self: Group,inheritant: Group) : Group
 end
 
 --[=[
+    @method SetPrecedence
     @within Group
-    This method will set this groups precedence
+    @param precedence number
+    @return Group -- The group object is returned for chaining
+    @tag chainable
+
+    This method will set the [Group._Precedence] property.
 ]=]
 function Group.SetPrecedence(self: Group,precedence: number) : Group
     self._Precedence = precedence;
+    return self;
+end
+
+--[=[
+    @method SetPrefix
+    @within Group
+    @param prefix string
+    @return Group -- The group object is returned for chaining
+    @tag chainable
+
+    This method will set the [Group._Prefix] property.
+]=]
+function Group.SetPrefix(self: Group,prefix: string) : Group
+    self._Prefix = prefix;
     return self;
 end
 
@@ -86,12 +132,16 @@ local function isNodeNegated(node: string) : boolean
 end
 
 --[=[
+    @method GrantPermission
     @within Group
-    @param permission string -- The permission node that will be granted to this group
-    This method grants a permission node to the group
+    @param permission string
+
+    This method grants a permission node to the [Group].
 ]=]
 function Group.GrantPermission(self: Group,permission: string)
-    local groupPerms: {string} = self._Permissions;
+    -- Checks if the permission is a permission node
+    permission = permission:match("%-?%w+%.%w+%.?%w*");
+    if not permission then return; end
     -- Revoke negated permission nodes if you are trying to grant that permission
     if not isNodeNegated(permission) then Group.RevokePermission(self,"-"..permission); end
     if table.find(self._Permissions,permission) then return; end
@@ -99,9 +149,11 @@ function Group.GrantPermission(self: Group,permission: string)
 end
 
 --[=[
+    @method RevokePermission
     @within Group
-    @param permission string -- The permission node that will be granted to this group
-    This method revokes a permission node from the group
+    @param permission string
+
+    This method revokes a permission node from the [Group].
 ]=]
 function Group.RevokePermission(self: Group,permission: string)
     local foundIndex: number? = table.find(self._Permissions,permission);
@@ -109,23 +161,26 @@ function Group.RevokePermission(self: Group,permission: string)
 end
 
 --[=[
+    @method HasPermission
     @within Group
-    @param permission -- The permission node that will be queried
+    @param permission string -- The permission node that will be queried
     @return boolean
-    This method queries if a permission node is in this group, negated permission nodes take priority and when present in the groups permissions it will return false.
+
+    This method checks if this [Group] has a specific permission node.
+    Negated permission nodes take priority, and when present in
+    the Group's permissions, this function will return false.
 ]=]
 function Group.HasPermission(self: Group,permission: string) : boolean
-    local groupPerms: {string} = self._Permissions;
     -- Check if the queried permission is negated
     local isQueryNegated: boolean = isNodeNegated(permission);
     if not isQueryNegated then
         -- Group has no permission if a negated permission is found
-        if table.find(groupPerms,"-"..permission) then return false; end
+        if table.find(self._Permissions,"-"..permission) then return false; end
     end
-    local permIndex: number? = table.find(groupPerms,permission);
+    local permIndex: number? = table.find(self._Permissions,permission);
     if not permIndex then
         -- If group has an asterisk then the group contains all permissions
-        if table.find(groupPerms,"*") then return true; end
+        if table.find(self._Permissions,"*") then return true; end
         -- Check in the inheritant group
         if self._Inheritant then return self._Inheritant:HasPermission(permission); end
     end
