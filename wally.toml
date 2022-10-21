@@ -5,5 +5,4 @@ registry = "https://github.com/UpliftGames/wally-index"
 realm = "server"
 
 [dependencies]
-TextStyling = "dev-syn/text-styling@0.1.0"
 TestEZ = "roblox/testez@0.4.1"
