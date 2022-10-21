@@ -40,6 +40,7 @@ export type Permissions = {
     _UserGroups: Map<Player,{Group}>,
     _Groups: Dictionary<Group>,
 
+    LoadConfig: (config: Config) -> (),
     Init: (permissionsConfig: Config?) -> Permissions,
     FindGroup: (name: string) -> Group?,
     FindHighestGroupPrecedence: (plr: Player) -> Group?,

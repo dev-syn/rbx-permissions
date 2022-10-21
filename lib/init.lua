@@ -160,40 +160,107 @@ Permissions._UserGroups = {};
 ]=]
 Permissions._Groups = {};
 
-local PermissionsConfig;
+local function loadPresetUserData(presetUsers: Dictionary<Types.PresetUserData>,plr: Player)
+    local presetUserData: Types.PresetUserData? = presetUsers[tostring(plr.UserId)];
+    if presetUserData then
+        -- Load preset player permissions
+        local presetPermissions: {string}? = presetUserData.Permissions;
+        if presetPermissions then
+            for _,permission: string in ipairs(presetPermissions) do
+                Permissions.GrantPermission(plr,permission);
+            end
+        end
+        -- Load preset player groups if they exist
+        local presetGroupNames: {string}? = presetUserData.Groups;
+        if presetGroupNames then
+            for _,groupName: string in ipairs(presetGroupNames) do
+                local group: Group? = Permissions.FindGroup(groupName);
+                if group then Permissions.SetUserGroup(plr,group::Group); end
+            end
+        end
+    end
+end
+
+local PermissionsConfig: Types.Config? = nil;
+local lastDefaultGroup: Group? = nil;
+
 local function initUser(plr: Player)
     if not Permissions._UserPermissions[plr] then
         Permissions._UserPermissions[plr] = {};
     end
     if not Permissions._UserGroups[plr] then
         Permissions._UserGroups[plr] = {};
-        -- Add player to default group
+    end
+    if PermissionsConfig then
+        local presetUsers: Dictionary<Types.PresetUserData> = PermissionsConfig.Users;
+        if presetUsers then
+            loadPresetUserData(presetUsers,plr)
+        end
+        -- Add player to default group if not already in it
         local defaultGroup = PermissionsConfig.DefaultGroup;
-        if defaultGroup then Permissions.SetUserGroup(plr,defaultGroup); end
-        -- Iterate through preset user data
-        if PermissionsConfig and PermissionsConfig.Users then
-            local presetUserData: Types.PresetUserData? = PermissionsConfig.Users[tostring(plr.UserId)];
-            if presetUserData then
+        if lastDefaultGroup then
+            if not (lastDefaultGroup == defaultGroup) then
+                Permissions.RemoveUserGroup(plr,lastDefaultGroup);
+                Permissions.SetUserGroup(plr,defaultGroup::Group);
+            end
+        else
+            Permissions.SetUserGroup(plr,defaultGroup::Group);
+        end
+    end
+end
 
-               -- Add preset user permissions
-                local presetPermissions: {string}? = presetUserData.Permissions;
-                if presetPermissions then
-                    for _,permission: string in ipairs(presetPermissions) do
-                        Permissions.GrantPermission(plr,permission);
-                    end
-                end
+--[=[
+    @within Permissions
 
-                -- Add preset groups to user
-                local presetGroupNames: {string}? = presetUserData.Groups;
-                if presetGroupNames then
-                    for _,groupName: string in ipairs(presetGroupNames) do
-                        local group: Group? = Permissions.FindGroup(groupName);
-                        if group then Permissions.SetUserGroup(plr,group::Group); end
+    This function loads the passed [config](/api/Config) loading the preset user data (groups,permissions)
+    to the preset users and setting the default group to the users.
+]=]
+function Permissions.LoadConfig(config: Types.Config)
+    -- Add the created groups from the config
+    local presetGroups = config.Groups;
+    if presetGroups then
+        for _,group in ipairs(presetGroups) do
+            -- If a group with this name doesn't already exist add the group
+            if not Permissions._Groups[group.Name] then Permissions._Groups[group.Name] = group; end
+        end
+    end
+    local defaultGroup: Group? = config.DefaultGroup;
+    local presetUsers: Dictionary<Types.PresetUserData> = config.Users;
+    -- Load player permissions & groups
+    if presetUsers then
+        for _,plr: Player in ipairs(game.Players:GetPlayers()) do
+            loadPresetUserData(presetUsers,plr);
+            if defaultGroup then
+                -- Set the players default group
+                if lastDefaultGroup then
+                    if not (lastDefaultGroup == defaultGroup) then
+                        Permissions.RemoveUserGroup(plr,lastDefaultGroup);
+                        Permissions.SetUserGroup(plr,defaultGroup::Group);
                     end
+                else
+                    Permissions.SetUserGroup(plr,defaultGroup::Group);
                 end
+                lastDefaultGroup = defaultGroup;
+            end
+        end
+    else
+        -- If no preset users then just set the default groups for the players
+        for _,plr: Player in ipairs(game.Players:GetPlayers()) do
+            if defaultGroup then
+                -- Set the players default group
+                if lastDefaultGroup then
+                    if not (lastDefaultGroup == defaultGroup) then
+                        Permissions.RemoveUserGroup(plr,lastDefaultGroup);
+                        Permissions.SetUserGroup(plr,defaultGroup::Group);
+                    end
+                else
+                    Permissions.SetUserGroup(plr,defaultGroup::Group);
+                end
+                lastDefaultGroup = defaultGroup;
             end
         end
     end
+    PermissionsConfig = config;
 end
 
 local isInitialized: boolean = false;
@@ -211,16 +278,9 @@ local isInitialized: boolean = false;
 ]=]
 function Permissions.Init(permissionsConfig: Types.Config?) : Permissions
     if isInitialized then return Permissions; end
-    if typeof(permissionsConfig) == "table" then PermissionsConfig = permissionsConfig end
 
-    if PermissionsConfig then
-        -- Add the created groups from the config
-        local presetGroups = PermissionsConfig.Groups;
-        if presetGroups then
-            for _,group in ipairs(presetGroups) do
-                Permissions._Groups[group.Name] = group;
-            end
-        end
+    if permissionsConfig then
+        Permissions.LoadConfig(permissionsConfig);
     end
     game.Players.PlayerRemoving:Connect(function(plr: Player)
         if Permissions._UserPermissions[plr] then Permissions._UserPermissions[plr] = nil; end
