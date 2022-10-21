@@ -1,12 +1,24 @@
 export type Map<K,V> = {[K]: V};
 export type Dictionary<T> = Map<string,T>;
 
+export type PresetUserData = {
+    Permissions: {string},
+    Groups: {string}
+};
+
+export type Config = {
+    Groups: {Group},
+    Users: Dictionary<PresetUserData>,
+    DefaultGroup: Group?
+};
+
 export type Schema_Group = {
     __index: any,
 
     new: (name: string,permissions: {string}?,inheritant: Group?) -> Group,
     SetInheritant: (self: Group,inheritant: Group) -> Group,
     SetPrecedence: (self: Group,precedence: number) -> Group,
+    SetPrefix: (self: Group,prefix: string) -> Group,
     GrantPermission: (self: Group,permission: string) -> (),
     RevokePermission: (self: Group,permission: string) -> (),
     HasPermission: (self: Group,permission: string) -> boolean
@@ -28,8 +40,8 @@ export type Permissions = {
     _UserGroups: Map<Player,{Group}>,
     _Groups: Dictionary<Group>,
 
-    Init: (permissionsConfig: Dictionary<any>?) -> Permissions,
-    FindGroup: (name: string) -> Group,
+    Init: (permissionsConfig: Config?) -> Permissions,
+    FindGroup: (name: string) -> Group?,
     FindHighestGroupPrecedence: (plr: Player) -> Group?,
     IsUserInGroup: (plr: Player,group: Group) -> boolean,
     SetUserGroup: (plr: Player,group: Group) -> (),
