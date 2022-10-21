@@ -2,7 +2,9 @@
 
 ## [Unreleased]
 
-
+## [0.2.3]
+### Removed
+- Dependencies folder inside Permissions (mb)
 ## [0.2.2]
 ### Added
 - Export Schema_Group type in Permissions
