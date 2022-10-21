@@ -2,6 +2,11 @@
 
 ## [Unreleased]
 
+
+## [0.2.2]
+### Added
+- Export Schema_Group type in Permissions
+
 ## [0.2.1]
 ### Removed
 - Permissions.HasPermission removed redundant variable
