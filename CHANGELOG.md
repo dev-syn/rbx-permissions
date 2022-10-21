@@ -2,6 +2,10 @@
 
 ## [Unreleased]
 
+## [0.2.1]
+### Removed
+- Permissions.HasPermission removed redundant variable
+
 ## [0.2.0]
 ### Added
 - Permissions.IsUserInGroup() to see if a user is in a group
