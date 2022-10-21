@@ -4,53 +4,246 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width,initial-scale=1">
 <meta name="generator" content="Docusaurus v2.0.0-beta.21">
-<title data-rh="true">Config | Permissions</title><meta data-rh="true" name="twitter:card" content="summary_large_image"><meta data-rh="true" property="og:url" content="https://dev-syn.github.io/rbx-permissions/api/Config"><meta data-rh="true" name="docusaurus_locale" content="en"><meta data-rh="true" name="docusaurus_tag" content="default"><meta data-rh="true" name="docsearch:language" content="en"><meta data-rh="true" name="docsearch:docusaurus_tag" content="default"><meta data-rh="true" property="og:title" content="Config | Permissions"><meta data-rh="true" name="description" content="This ModuleScript is where you can preset the groups used by permissions and preset users to have specific permissions and groups assigned to them. The ModuleScript must return a table with any of the properties displayed on this page."><meta data-rh="true" property="og:description" content="This ModuleScript is where you can preset the groups used by permissions and preset users to have specific permissions and groups assigned to them. The ModuleScript must return a table with any of the properties displayed on this page."><link data-rh="true" rel="canonical" href="https://dev-syn.github.io/rbx-permissions/api/Config"><link data-rh="true" rel="alternate" href="https://dev-syn.github.io/rbx-permissions/api/Config" hreflang="en"><link data-rh="true" rel="alternate" href="https://dev-syn.github.io/rbx-permissions/api/Config" hreflang="x-default"><link rel="stylesheet" href="/rbx-permissions/assets/css/styles.bc734c04.css">
-<link rel="preload" href="/rbx-permissions/assets/js/runtime~main.77f0c7cd.js" as="script">
-<link rel="preload" href="/rbx-permissions/assets/js/main.3d9b76d2.js" as="script">
+<title data-rh="true">Config | Permissions</title><meta data-rh="true" name="twitter:card" content="summary_large_image"><meta data-rh="true" property="og:url" content="https://dev-syn.github.io/rbx-permissions/api/Config"><meta data-rh="true" name="docusaurus_locale" content="en"><meta data-rh="true" name="docusaurus_tag" content="default"><meta data-rh="true" name="docsearch:language" content="en"><meta data-rh="true" name="docsearch:docusaurus_tag" content="default"><meta data-rh="true" property="og:title" content="Config | Permissions"><meta data-rh="true" name="description" content="This class was designed to implement permissions &amp; groups that get assigned to users used to restrict certain features across your game.
+
+## Configuration Example
+```lua
+local Permissions = require(PermissionsModule);
+type Group = Permissions.Group;
+
+-- The Group class
+local Group: Permissions.Schema_Group = Permissions.Group;
+
+-- Any groups we will reuse in the Config we will need to store in a variable
+local defaultGroup: Group = Group.new(&quot;Default&quot;,{&quot;example.default&quot;});
+local example1: Group = Group.new(&quot;Example1&quot;,&quot;example.permission1&quot;);
+
+return {
+    Groups = {
+        defaultGroup -- The default group also must still be added
+
+        -- &quot;Example 1&quot; would contain permission nodes example.permission1
+        example1,
+
+        -- &quot;Example 2&quot; would inherit example1 permission nodes &amp; example.permission2
+        Group.new(&quot;Example2&quot;,&quot;example.permission2&quot;,example1),
+
+        -- &quot;Example 3&quot; would have the highest precedence a group could have
+        -- &quot;Example 3&quot; would have the inherited example.permission1 permission node
+        Group.new(&quot;Example3&quot;):SetPrecedence(0):SetInheritant(example1),
+
+        -- This will be used for later
+        Group.new(&quot;Developer&quot;,&quot;example.superpermission&quot;,defaultGroup),
+    },
+    Users = {
+        [&quot;Player.UserId&quot;] = {
+        --[[
+            You can place permission nodes inside Permissions to
+            automatically assign those permissions to that user.
+        --]]
+            Permissions = {&quot;example.only_I_have_this_permission&quot;},
+
+        --[[
+            You can place group names inside of Groups to have
+            the user automatically be assigned to those Groups.
+
+            This user would automatically be in the &quot;Example 2&quot; group
+        --]]
+            Groups = {&quot;Example2&quot;}
+        },
+        [&quot;ownerid&quot;] = {
+            -- Optionally grant this specific user all permissions
+            Permissions = {&quot;*&quot;},
+
+            -- Assign this user to the Developer group we made earlier
+            Groups = {&quot;Developer&quot;}
+        }
+    },
+    DefaultGroup = defaultGroup
+}
+```
+
+:::note
+
+&gt;You still have to add the Default Group to the [Config.Groups] table.
+
+:::"><meta data-rh="true" property="og:description" content="This class was designed to implement permissions &amp; groups that get assigned to users used to restrict certain features across your game.
+
+## Configuration Example
+```lua
+local Permissions = require(PermissionsModule);
+type Group = Permissions.Group;
+
+-- The Group class
+local Group: Permissions.Schema_Group = Permissions.Group;
+
+-- Any groups we will reuse in the Config we will need to store in a variable
+local defaultGroup: Group = Group.new(&quot;Default&quot;,{&quot;example.default&quot;});
+local example1: Group = Group.new(&quot;Example1&quot;,&quot;example.permission1&quot;);
+
+return {
+    Groups = {
+        defaultGroup -- The default group also must still be added
+
+        -- &quot;Example 1&quot; would contain permission nodes example.permission1
+        example1,
+
+        -- &quot;Example 2&quot; would inherit example1 permission nodes &amp; example.permission2
+        Group.new(&quot;Example2&quot;,&quot;example.permission2&quot;,example1),
+
+        -- &quot;Example 3&quot; would have the highest precedence a group could have
+        -- &quot;Example 3&quot; would have the inherited example.permission1 permission node
+        Group.new(&quot;Example3&quot;):SetPrecedence(0):SetInheritant(example1),
+
+        -- This will be used for later
+        Group.new(&quot;Developer&quot;,&quot;example.superpermission&quot;,defaultGroup),
+    },
+    Users = {
+        [&quot;Player.UserId&quot;] = {
+        --[[
+            You can place permission nodes inside Permissions to
+            automatically assign those permissions to that user.
+        --]]
+            Permissions = {&quot;example.only_I_have_this_permission&quot;},
+
+        --[[
+            You can place group names inside of Groups to have
+            the user automatically be assigned to those Groups.
+
+            This user would automatically be in the &quot;Example 2&quot; group
+        --]]
+            Groups = {&quot;Example2&quot;}
+        },
+        [&quot;ownerid&quot;] = {
+            -- Optionally grant this specific user all permissions
+            Permissions = {&quot;*&quot;},
+
+            -- Assign this user to the Developer group we made earlier
+            Groups = {&quot;Developer&quot;}
+        }
+    },
+    DefaultGroup = defaultGroup
+}
+```
+
+:::note
+
+&gt;You still have to add the Default Group to the [Config.Groups] table.
+
+:::"><link data-rh="true" rel="canonical" href="https://dev-syn.github.io/rbx-permissions/api/Config"><link data-rh="true" rel="alternate" href="https://dev-syn.github.io/rbx-permissions/api/Config" hreflang="en"><link data-rh="true" rel="alternate" href="https://dev-syn.github.io/rbx-permissions/api/Config" hreflang="x-default"><link rel="stylesheet" href="/rbx-permissions/assets/css/styles.bc734c04.css">
+<link rel="preload" href="/rbx-permissions/assets/js/runtime~main.ec73c7a7.js" as="script">
+<link rel="preload" href="/rbx-permissions/assets/js/main.6f3c60ce.js" as="script">
 </head>
 <body class="navigation-with-keyboard">
 <script>!function(){function e(e){document.documentElement.setAttribute("data-theme",e)}var t=function(){var e=null;try{e=localStorage.getItem("theme")}catch(e){}return e}();null!==t?e(t):window.matchMedia("(prefers-color-scheme: dark)").matches?e("dark"):(window.matchMedia("(prefers-color-scheme: light)").matches,e("light"))}()</script><div id="__docusaurus">
-<div role="region"><a href="#" class="skipToContent_fXgn">Skip to main content</a></div><nav class="navbar navbar--fixed-top"><div class="navbar__inner"><div class="navbar__items"><button aria-label="Navigation bar toggle" class="navbar__toggle clean-btn" type="button" tabindex="0"><svg width="30" height="30" viewBox="0 0 30 30" aria-hidden="true"><path stroke="currentColor" stroke-linecap="round" stroke-miterlimit="10" stroke-width="2" d="M4 7h22M4 15h22M4 23h22"></path></svg></button><a class="navbar__brand" href="/rbx-permissions/"><b class="navbar__title text--truncate">Permissions</b></a><a aria-current="page" class="navbar__item navbar__link navbar__link--active" href="/rbx-permissions/api/">API</a><a class="navbar__item navbar__link" href="/rbx-permissions/changelog">Changelog</a></div><div class="navbar__items navbar__items--right"><a href="https://github.com/dev-syn/rbx-permissions" target="_blank" rel="noopener noreferrer" class="navbar__item navbar__link">GitHub<svg width="13.5" height="13.5" aria-hidden="true" viewBox="0 0 24 24" class="iconExternalLink_lCJq"><path fill="currentColor" d="M21 13v10h-21v-19h12v2h-10v15h17v-8h2zm3-12h-10.988l4.035 4-6.977 7.07 2.828 2.828 6.977-7.07 4.125 4.172v-11z"></path></svg></a><div class="toggle_vylO colorModeToggle_DEke"><button class="clean-btn toggleButton_gllP toggleButtonDisabled_aARS" type="button" disabled="" title="Switch between dark and light mode (currently light mode)" aria-label="Switch between dark and light mode (currently light mode)"><svg viewBox="0 0 24 24" width="24" height="24" class="lightToggleIcon_pyhR"><path fill="currentColor" d="M12,9c1.65,0,3,1.35,3,3s-1.35,3-3,3s-3-1.35-3-3S10.35,9,12,9 M12,7c-2.76,0-5,2.24-5,5s2.24,5,5,5s5-2.24,5-5 S14.76,7,12,7L12,7z M2,13l2,0c0.55,0,1-0.45,1-1s-0.45-1-1-1l-2,0c-0.55,0-1,0.45-1,1S1.45,13,2,13z M20,13l2,0c0.55,0,1-0.45,1-1 s-0.45-1-1-1l-2,0c-0.55,0-1,0.45-1,1S19.45,13,20,13z M11,2v2c0,0.55,0.45,1,1,1s1-0.45,1-1V2c0-0.55-0.45-1-1-1S11,1.45,11,2z M11,20v2c0,0.55,0.45,1,1,1s1-0.45,1-1v-2c0-0.55-0.45-1-1-1C11.45,19,11,19.45,11,20z M5.99,4.58c-0.39-0.39-1.03-0.39-1.41,0 c-0.39,0.39-0.39,1.03,0,1.41l1.06,1.06c0.39,0.39,1.03,0.39,1.41,0s0.39-1.03,0-1.41L5.99,4.58z M18.36,16.95 c-0.39-0.39-1.03-0.39-1.41,0c-0.39,0.39-0.39,1.03,0,1.41l1.06,1.06c0.39,0.39,1.03,0.39,1.41,0c0.39-0.39,0.39-1.03,0-1.41 L18.36,16.95z M19.42,5.99c0.39-0.39,0.39-1.03,0-1.41c-0.39-0.39-1.03-0.39-1.41,0l-1.06,1.06c-0.39,0.39-0.39,1.03,0,1.41 s1.03,0.39,1.41,0L19.42,5.99z M7.05,18.36c0.39-0.39,0.39-1.03,0-1.41c-0.39-0.39-1.03-0.39-1.41,0l-1.06,1.06 c-0.39,0.39-0.39,1.03,0,1.41s1.03,0.39,1.41,0L7.05,18.36z"></path></svg><svg viewBox="0 0 24 24" width="24" height="24" class="darkToggleIcon_wfgR"><path fill="currentColor" d="M9.37,5.51C9.19,6.15,9.1,6.82,9.1,7.5c0,4.08,3.32,7.4,7.4,7.4c0.68,0,1.35-0.09,1.99-0.27C17.45,17.19,14.93,19,12,19 c-3.86,0-7-3.14-7-7C5,9.07,6.81,6.55,9.37,5.51z M12,3c-4.97,0-9,4.03-9,9s4.03,9,9,9s9-4.03,9-9c0-0.46-0.04-0.92-0.1-1.36 c-0.98,1.37-2.58,2.26-4.4,2.26c-2.98,0-5.4-2.42-5.4-5.4c0-1.81,0.89-3.42,2.26-4.4C12.92,3.04,12.46,3,12,3L12,3z"></path></svg></button></div><div class="searchBox_ZlJk"><div class="navbar__search"><span aria-label="expand searchbar" role="button" class="search-icon" tabindex="0"></span><input type="search" id="search_input_react" placeholder="Press S to Search..." aria-label="Search" class="navbar__search-input search-bar"></div></div></div></div><div role="presentation" class="navbar-sidebar__backdrop"></div></nav><div class="main-wrapper docPageContainer_wNNk"><div class="docPage_Dpn1"><div class="docSidebarContainer_o_re"><div class="sidebar_njMd"><nav class="menu thin-scrollbar menu_SIkG"><ul class="theme-doc-sidebar-menu menu__list"><li class="theme-doc-sidebar-item-link theme-doc-sidebar-item-link-level-1 menu__list-item"><a class="menu__link" href="/rbx-permissions/api/Permissions">​Permissions</a></li><li class="theme-doc-sidebar-item-link theme-doc-sidebar-item-link-level-1 menu__list-item"><a class="menu__link" href="/rbx-permissions/api/Group">​Group</a></li><li class="theme-doc-sidebar-item-link theme-doc-sidebar-item-link-level-1 menu__list-item"><a class="menu__link menu__link--active" aria-current="page" href="/rbx-permissions/api/Config">​Config</a></li></ul></nav></div></div><main class="docMainContainer_HJE1"><div class="container padding-vert--lg"><div class="row"><div class="col docItemCol_MU3C"><div class="docItemContainer_Wv98"><article><div class="member_J0w1 markdown"><div class="tocCollapsible_ETCw theme-doc-toc-mobile tocMobile_oUs_"><button type="button" class="clean-btn tocCollapsibleButton_TO0P">On this page</button></div><header><h1 class="docTitle_mZRt" style="text-decoration:none"><span style="display:inline-block">Config</span></h1><div class="luaClassTags_EipM"></div><div>
-<p>This ModuleScript is where you can preset the groups used by permissions and preset users to have specific permissions and groups assigned to them. The ModuleScript must return a table with any of the properties displayed on this page.</p>
-</div></header><h2 class="anchor anchorWithStickyNavbar_LWe7" id="types">Types<a class="hash-link" href="#types" title="Direct link to heading">​</a></h2><div class="divider_rE5g"></div><h3 class="anchor anchorWithStickyNavbar_LWe7" id="UserPresetData"><code style="text-decoration:none">UserPresetData</code><a class="hash-link" href="#UserPresetData" title="Direct link to heading">​</a></h3><div class="repositoryDetailsContainer_BPdw"><a class="sourceButton_sEho" href="https://github.com/dev-syn/rbx-permissions/blob/main/lib/init.lua#L19"><div class="sourceButtonText_Vh0m">&lt;/&gt;</div></a></div><div class="memberString_GwaU"><code class="purple_ieR2">interface</code> <code>UserPresetData<!-- --> <!-- -->{</code><div class="inset_uKQm"><div><code>Permissions<!-- -->: </code><code class="purple_ieR2">{</code><code class="blue_P4bS">string</code><code class="purple_ieR2">}</code><span class="inlineDescription_G7Er">-- <span>
+<div role="region"><a href="#" class="skipToContent_fXgn">Skip to main content</a></div><nav class="navbar navbar--fixed-top"><div class="navbar__inner"><div class="navbar__items"><button aria-label="Navigation bar toggle" class="navbar__toggle clean-btn" type="button" tabindex="0"><svg width="30" height="30" viewBox="0 0 30 30" aria-hidden="true"><path stroke="currentColor" stroke-linecap="round" stroke-miterlimit="10" stroke-width="2" d="M4 7h22M4 15h22M4 23h22"></path></svg></button><a class="navbar__brand" href="/rbx-permissions/"><b class="navbar__title text--truncate">Permissions</b></a><a aria-current="page" class="navbar__item navbar__link navbar__link--active" href="/rbx-permissions/api/">API</a><a class="navbar__item navbar__link" href="/rbx-permissions/changelog">Changelog</a></div><div class="navbar__items navbar__items--right"><a href="https://github.com/dev-syn/rbx-permissions" target="_blank" rel="noopener noreferrer" class="navbar__item navbar__link">GitHub<svg width="13.5" height="13.5" aria-hidden="true" viewBox="0 0 24 24" class="iconExternalLink_lCJq"><path fill="currentColor" d="M21 13v10h-21v-19h12v2h-10v15h17v-8h2zm3-12h-10.988l4.035 4-6.977 7.07 2.828 2.828 6.977-7.07 4.125 4.172v-11z"></path></svg></a><div class="toggle_vylO colorModeToggle_DEke"><button class="clean-btn toggleButton_gllP toggleButtonDisabled_aARS" type="button" disabled="" title="Switch between dark and light mode (currently light mode)" aria-label="Switch between dark and light mode (currently light mode)"><svg viewBox="0 0 24 24" width="24" height="24" class="lightToggleIcon_pyhR"><path fill="currentColor" d="M12,9c1.65,0,3,1.35,3,3s-1.35,3-3,3s-3-1.35-3-3S10.35,9,12,9 M12,7c-2.76,0-5,2.24-5,5s2.24,5,5,5s5-2.24,5-5 S14.76,7,12,7L12,7z M2,13l2,0c0.55,0,1-0.45,1-1s-0.45-1-1-1l-2,0c-0.55,0-1,0.45-1,1S1.45,13,2,13z M20,13l2,0c0.55,0,1-0.45,1-1 s-0.45-1-1-1l-2,0c-0.55,0-1,0.45-1,1S19.45,13,20,13z M11,2v2c0,0.55,0.45,1,1,1s1-0.45,1-1V2c0-0.55-0.45-1-1-1S11,1.45,11,2z M11,20v2c0,0.55,0.45,1,1,1s1-0.45,1-1v-2c0-0.55-0.45-1-1-1C11.45,19,11,19.45,11,20z M5.99,4.58c-0.39-0.39-1.03-0.39-1.41,0 c-0.39,0.39-0.39,1.03,0,1.41l1.06,1.06c0.39,0.39,1.03,0.39,1.41,0s0.39-1.03,0-1.41L5.99,4.58z M18.36,16.95 c-0.39-0.39-1.03-0.39-1.41,0c-0.39,0.39-0.39,1.03,0,1.41l1.06,1.06c0.39,0.39,1.03,0.39,1.41,0c0.39-0.39,0.39-1.03,0-1.41 L18.36,16.95z M19.42,5.99c0.39-0.39,0.39-1.03,0-1.41c-0.39-0.39-1.03-0.39-1.41,0l-1.06,1.06c-0.39,0.39-0.39,1.03,0,1.41 s1.03,0.39,1.41,0L19.42,5.99z M7.05,18.36c0.39-0.39,0.39-1.03,0-1.41c-0.39-0.39-1.03-0.39-1.41,0l-1.06,1.06 c-0.39,0.39-0.39,1.03,0,1.41s1.03,0.39,1.41,0L7.05,18.36z"></path></svg><svg viewBox="0 0 24 24" width="24" height="24" class="darkToggleIcon_wfgR"><path fill="currentColor" d="M9.37,5.51C9.19,6.15,9.1,6.82,9.1,7.5c0,4.08,3.32,7.4,7.4,7.4c0.68,0,1.35-0.09,1.99-0.27C17.45,17.19,14.93,19,12,19 c-3.86,0-7-3.14-7-7C5,9.07,6.81,6.55,9.37,5.51z M12,3c-4.97,0-9,4.03-9,9s4.03,9,9,9s9-4.03,9-9c0-0.46-0.04-0.92-0.1-1.36 c-0.98,1.37-2.58,2.26-4.4,2.26c-2.98,0-5.4-2.42-5.4-5.4c0-1.81,0.89-3.42,2.26-4.4C12.92,3.04,12.46,3,12,3L12,3z"></path></svg></button></div><div class="searchBox_ZlJk"><div class="navbar__search"><span aria-label="expand searchbar" role="button" class="search-icon" tabindex="0"></span><input type="search" id="search_input_react" placeholder="Press S to Search..." aria-label="Search" class="navbar__search-input search-bar"></div></div></div></div><div role="presentation" class="navbar-sidebar__backdrop"></div></nav><div class="main-wrapper docPageContainer_wNNk"><div class="docPage_Dpn1"><div class="docSidebarContainer_o_re"><div class="sidebar_njMd"><nav class="menu thin-scrollbar menu_SIkG"><ul class="theme-doc-sidebar-menu menu__list"><li class="theme-doc-sidebar-item-link theme-doc-sidebar-item-link-level-1 menu__list-item"><a class="menu__link menu__link--active" aria-current="page" href="/rbx-permissions/api/Config">​Config</a></li><li class="theme-doc-sidebar-item-link theme-doc-sidebar-item-link-level-1 menu__list-item"><a class="menu__link" href="/rbx-permissions/api/Group">​Group</a></li><li class="theme-doc-sidebar-item-link theme-doc-sidebar-item-link-level-1 menu__list-item"><a class="menu__link" href="/rbx-permissions/api/Permissions">​Permissions</a></li></ul></nav></div></div><main class="docMainContainer_HJE1"><div class="container padding-vert--lg"><div class="row"><div class="col docItemCol_MU3C"><div class="docItemContainer_Wv98"><article><div class="member_J0w1 markdown"><div class="tocCollapsible_ETCw theme-doc-toc-mobile tocMobile_oUs_"><button type="button" class="clean-btn tocCollapsibleButton_TO0P">On this page</button></div><header><h1 class="docTitle_mZRt" style="text-decoration:none"><span style="display:inline-block">Config</span></h1><div class="luaClassTags_EipM"></div><div>
+<p>This class was designed to implement permissions &#x26; groups that get assigned to users used to restrict certain features across your game.</p>
+<h2>Configuration Example</h2>
+<pre class="language-lua"><code class="language-lua"><span class="token keyword">local</span> Permissions <span class="token operator">=</span> <span class="token function">require</span><span class="token punctuation">(</span>PermissionsModule<span class="token punctuation">)</span><span class="token punctuation">;</span>
+type Group <span class="token operator">=</span> Permissions<span class="token punctuation">.</span>Group<span class="token punctuation">;</span>
+
+<span class="token comment">-- The Group class</span>
+<span class="token keyword">local</span> Group<span class="token punctuation">:</span> Permissions<span class="token punctuation">.</span>Schema_Group <span class="token operator">=</span> Permissions<span class="token punctuation">.</span>Group<span class="token punctuation">;</span>
+
+<span class="token comment">-- Any groups we will reuse in the Config we will need to store in a variable</span>
+<span class="token keyword">local</span> defaultGroup<span class="token punctuation">:</span> Group <span class="token operator">=</span> Group<span class="token punctuation">.</span><span class="token function">new</span><span class="token punctuation">(</span><span class="token string">"Default"</span><span class="token punctuation">,</span><span class="token punctuation">{</span><span class="token string">"example.default"</span><span class="token punctuation">}</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+<span class="token keyword">local</span> example1<span class="token punctuation">:</span> Group <span class="token operator">=</span> Group<span class="token punctuation">.</span><span class="token function">new</span><span class="token punctuation">(</span><span class="token string">"Example1"</span><span class="token punctuation">,</span><span class="token string">"example.permission1"</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+
+<span class="token keyword">return</span> <span class="token punctuation">{</span>
+    Groups <span class="token operator">=</span> <span class="token punctuation">{</span>
+        defaultGroup <span class="token comment">-- The default group also must still be added</span>
+
+        <span class="token comment">-- "Example 1" would contain permission nodes example.permission1</span>
+        example1<span class="token punctuation">,</span>
+
+        <span class="token comment">-- "Example 2" would inherit example1 permission nodes &#x26; example.permission2</span>
+        Group<span class="token punctuation">.</span><span class="token function">new</span><span class="token punctuation">(</span><span class="token string">"Example2"</span><span class="token punctuation">,</span><span class="token string">"example.permission2"</span><span class="token punctuation">,</span>example1<span class="token punctuation">)</span><span class="token punctuation">,</span>
+
+        <span class="token comment">-- "Example 3" would have the highest precedence a group could have</span>
+        <span class="token comment">-- "Example 3" would have the inherited example.permission1 permission node</span>
+        Group<span class="token punctuation">.</span><span class="token function">new</span><span class="token punctuation">(</span><span class="token string">"Example3"</span><span class="token punctuation">)</span><span class="token punctuation">:</span><span class="token function">SetPrecedence</span><span class="token punctuation">(</span><span class="token number">0</span><span class="token punctuation">)</span><span class="token punctuation">:</span><span class="token function">SetInheritant</span><span class="token punctuation">(</span>example1<span class="token punctuation">)</span><span class="token punctuation">,</span>
+
+        <span class="token comment">-- This will be used for later</span>
+        Group<span class="token punctuation">.</span><span class="token function">new</span><span class="token punctuation">(</span><span class="token string">"Developer"</span><span class="token punctuation">,</span><span class="token string">"example.superpermission"</span><span class="token punctuation">,</span>defaultGroup<span class="token punctuation">)</span><span class="token punctuation">,</span>
+    <span class="token punctuation">}</span><span class="token punctuation">,</span>
+    Users <span class="token operator">=</span> <span class="token punctuation">{</span>
+        <span class="token punctuation">[</span><span class="token string">"Player.UserId"</span><span class="token punctuation">]</span> <span class="token operator">=</span> <span class="token punctuation">{</span>
+        <span class="token comment">--[[
+            You can place permission nodes inside Permissions to
+            automatically assign those permissions to that user.
+        --]]</span>
+            Permissions <span class="token operator">=</span> <span class="token punctuation">{</span><span class="token string">"example.only_I_have_this_permission"</span><span class="token punctuation">}</span><span class="token punctuation">,</span>
+
+        <span class="token comment">--[[
+            You can place group names inside of Groups to have
+            the user automatically be assigned to those Groups.
+
+            This user would automatically be in the "Example 2" group
+        --]]</span>
+            Groups <span class="token operator">=</span> <span class="token punctuation">{</span><span class="token string">"Example2"</span><span class="token punctuation">}</span>
+        <span class="token punctuation">}</span><span class="token punctuation">,</span>
+        <span class="token punctuation">[</span><span class="token string">"ownerid"</span><span class="token punctuation">]</span> <span class="token operator">=</span> <span class="token punctuation">{</span>
+            <span class="token comment">-- Optionally grant this specific user all permissions</span>
+            Permissions <span class="token operator">=</span> <span class="token punctuation">{</span><span class="token string">"*"</span><span class="token punctuation">}</span><span class="token punctuation">,</span>
+
+            <span class="token comment">-- Assign this user to the Developer group we made earlier</span>
+            Groups <span class="token operator">=</span> <span class="token punctuation">{</span><span class="token string">"Developer"</span><span class="token punctuation">}</span>
+        <span class="token punctuation">}</span>
+    <span class="token punctuation">}</span><span class="token punctuation">,</span>
+    DefaultGroup <span class="token operator">=</span> defaultGroup
+<span class="token punctuation">}</span>
+</code></pre>
+<div class="admonition admonition-note alert alert--secondary">
+  <div class="admonition-heading">
+    <h5><span class="admonition-icon"><svg xmlns="http://www.w3.org/2000/svg" width="14" height="16" viewBox="0 0 14 16">
+          <path d="M6.3 5.69a.942.942 0 0 1-.28-.7c0-.28.09-.52.28-.7.19-.18.42-.28.7-.28.28 0 .52.09.7.28.18.19.28.42.28.7 0 .28-.09.52-.28.7a1 1 0 0 1-.7.3c-.28 0-.52-.11-.7-.3zM8 7.99c-.02-.25-.11-.48-.31-.69-.2-.19-.42-.3-.69-.31H6c-.27.02-.48.13-.69.31-.2.2-.3.44-.31.69h1v3c.02.27.11.5.31.69.2.2.42.31.69.31h1c.27 0 .48-.11.69-.31.2-.19.3-.42.31-.69H8V7.98v.01zM7 2.3c-3.14 0-5.7 2.54-5.7 5.68 0 3.14 2.56 5.7 5.7 5.7s5.7-2.55 5.7-5.7c0-3.15-2.56-5.69-5.7-5.69v.01zM7 .98c3.86 0 7 3.14 7 7s-3.14 7-7 7-7-3.12-7-7 3.14-7 7-7z"></path>
+        </svg></span>note</h5>
+  </div>
+  <div class="admonition-content">
+    <blockquote>
+      <p>You still have to add the Default Group to the <a href="/rbx-permissions/api/Config#Groups">Config.Groups</a> table.</p>
+    </blockquote>
+  </div>
+</div>
+</div></header><h2 class="anchor anchorWithStickyNavbar_LWe7" id="types">Types<a class="hash-link" href="#types" title="Direct link to heading">​</a></h2><div class="divider_rE5g"></div><h3 class="anchor anchorWithStickyNavbar_LWe7" id="UserPresetData"><code style="text-decoration:none">UserPresetData</code><a class="hash-link" href="#UserPresetData" title="Direct link to heading">​</a></h3><div class="repositoryDetailsContainer_BPdw"><a class="sourceButton_sEho" href="https://github.com/dev-syn/rbx-permissions/blob/main/lib/init.lua#L85"><div class="sourceButtonText_Vh0m">&lt;/&gt;</div></a></div><div class="memberString_GwaU"><code class="purple_ieR2">interface</code> <code>UserPresetData<!-- --> <!-- -->{</code><div class="inset_uKQm"><div><code>Permissions<!-- -->: </code><code class="purple_ieR2">{</code><code class="blue_P4bS">string</code><code class="purple_ieR2">}</code><span class="inlineDescription_G7Er">-- <span>
 <p>A array of permission nodes</p>
 </span></span></div><div><code>Groups<!-- -->: </code><code class="purple_ieR2">{</code><code class="blue_P4bS">string</code><code class="purple_ieR2">}</code><span class="inlineDescription_G7Er">-- <span>
 <p>An array of group names to be assigned to the user</p>
 </span></span></div></div><code>}</code></div><div>
-<p>The UserPresetData which will contain permission nodes and groups to be assigned to the user.</p>
-</div><h2 class="anchor anchorWithStickyNavbar_LWe7" id="properties">Properties<a class="hash-link" href="#properties" title="Direct link to heading">​</a></h2><div class="divider_rE5g"></div><h3 class="anchor anchorWithStickyNavbar_LWe7" id="Groups"><code style="text-decoration:none">Groups</code><a class="hash-link" href="#Groups" title="Direct link to heading">​</a></h3><div class="repositoryDetailsContainer_BPdw"><a class="sourceButton_sEho" href="https://github.com/dev-syn/rbx-permissions/blob/main/lib/init.lua#L11"><div class="sourceButtonText_Vh0m">&lt;/&gt;</div></a></div><div class="memberString_GwaU"><code>Config<!-- -->.<!-- -->Groups<!-- -->:<!-- --> </code> <code class="purple_ieR2">{</code><code class="blue_P4bS"><a style="text-decoration:underline;color:inherit" href="/rbx-permissions/api/Group">Group</a></code><code class="purple_ieR2">}</code></div><div>
-<p>Place Group objects in this table to allow group assigning to users.</p>
-</div><div class="divider_rE5g"></div><h3 class="anchor anchorWithStickyNavbar_LWe7" id="Users"><code style="text-decoration:none">Users</code><a class="hash-link" href="#Users" title="Direct link to heading">​</a></h3><div class="repositoryDetailsContainer_BPdw"><a class="sourceButton_sEho" href="https://github.com/dev-syn/rbx-permissions/blob/main/lib/init.lua#L25"><div class="sourceButtonText_Vh0m">&lt;/&gt;</div></a></div><div class="memberString_GwaU"><code>Config<!-- -->.<!-- -->Users<!-- -->:<!-- --> </code> <code class="blue_P4bS">Dictionary</code><code class="op_lSLc">&lt;</code><code class="blue_P4bS"><a style="text-decoration:underline;color:inherit" href="/rbx-permissions/api/Config#UserPresetData">UserPresetData</a></code><code class="op_lSLc">&gt;</code></div><div>
-<p>A dictionary that contains Player.UserId in string format as the key and UserPresetData as it's value.</p>
-</div><div class="divider_rE5g"></div><h3 class="anchor anchorWithStickyNavbar_LWe7" id="DefaultGroup"><code style="text-decoration:none">DefaultGroup</code><a class="hash-link" href="#DefaultGroup" title="Direct link to heading">​</a></h3><div class="repositoryDetailsContainer_BPdw"><a class="sourceButton_sEho" href="https://github.com/dev-syn/rbx-permissions/blob/main/lib/init.lua#L31"><div class="sourceButtonText_Vh0m">&lt;/&gt;</div></a></div><div class="memberString_GwaU"><code>Config<!-- -->.<!-- -->DefaultGroup<!-- -->:<!-- --> </code> <code class="blue_P4bS"><a style="text-decoration:underline;color:inherit" href="/rbx-permissions/api/Group">Group</a></code></div><div>
-<p>The default group that will be assigned automatically to joining users.</p>
+<p>The UserPresetData is a table that contains permission nodes and <a href="/rbx-permissions/api/Group">Group</a> names that will be assigned to the user.</p>
+</div><h2 class="anchor anchorWithStickyNavbar_LWe7" id="properties">Properties<a class="hash-link" href="#properties" title="Direct link to heading">​</a></h2><div class="divider_rE5g"></div><h3 class="anchor anchorWithStickyNavbar_LWe7" id="Groups"><code style="text-decoration:none">Groups</code><a class="hash-link" href="#Groups" title="Direct link to heading">​</a></h3><div class="repositoryDetailsContainer_BPdw"><a class="sourceButton_sEho" href="https://github.com/dev-syn/rbx-permissions/blob/main/lib/init.lua#L76"><div class="sourceButtonText_Vh0m">&lt;/&gt;</div></a></div><div class="memberString_GwaU"><code>Config<!-- -->.<!-- -->Groups<!-- -->:<!-- --> </code> <code class="purple_ieR2">{</code><code class="blue_P4bS"><a style="text-decoration:underline;color:inherit" href="/rbx-permissions/api/Group">Group</a></code><code class="purple_ieR2">}</code></div><div>
+<p>This is an array of <a href="/rbx-permissions/api/Group">Group</a> objects that represent all the groups that <a href="/rbx-permissions/api/Permissions">Permissions</a> should be aware of.</p>
+</div><div class="divider_rE5g"></div><h3 class="anchor anchorWithStickyNavbar_LWe7" id="Users"><code style="text-decoration:none">Users</code><a class="hash-link" href="#Users" title="Direct link to heading">​</a></h3><div class="repositoryDetailsContainer_BPdw"><a class="sourceButton_sEho" href="https://github.com/dev-syn/rbx-permissions/blob/main/lib/init.lua#L92"><div class="sourceButtonText_Vh0m">&lt;/&gt;</div></a></div><div class="memberString_GwaU"><code>Config<!-- -->.<!-- -->Users<!-- -->:<!-- --> </code> <code class="blue_P4bS">Dictionary</code><code class="op_lSLc">&lt;</code><code class="blue_P4bS"><a style="text-decoration:underline;color:inherit" href="/rbx-permissions/api/Config#UserPresetData">UserPresetData</a></code><code class="op_lSLc">&gt;</code></div><div>
+<p>A dictionary that which contains <a href="https://developer.roblox.com/en-us/api-reference/class/Player#UserId" target="_blank">Player.UserId</a> as the keys and <a href="/rbx-permissions/api/Permissions#UserPresetData">Permissions.UserPresetData</a> as the values.</p>
+</div><div class="divider_rE5g"></div><h3 class="anchor anchorWithStickyNavbar_LWe7" id="DefaultGroup"><code style="text-decoration:none">DefaultGroup</code><a class="hash-link" href="#DefaultGroup" title="Direct link to heading">​</a></h3><div class="repositoryDetailsContainer_BPdw"><a class="sourceButton_sEho" href="https://github.com/dev-syn/rbx-permissions/blob/main/lib/init.lua#L99"><div class="sourceButtonText_Vh0m">&lt;/&gt;</div></a></div><div class="memberString_GwaU"><code>Config<!-- -->.<!-- -->DefaultGroup<!-- -->:<!-- --> </code> <code class="blue_P4bS"><a style="text-decoration:underline;color:inherit" href="/rbx-permissions/api/Group">Group</a></code></div><div>
+<p>The default group is a <a href="/rbx-permissions/api/Group">Group</a> that is automatically assigned to joining users.</p>
 </div></div></article></div><details><summary>Show raw api</summary><pre style="max-width:100%;white-space:pre-wrap">{
     &quot;functions&quot;: [],
     &quot;properties&quot;: [
         {
             &quot;name&quot;: &quot;Groups&quot;,
-            &quot;desc&quot;: &quot;Place Group objects in this table to allow group assigning to users.&quot;,
+            &quot;desc&quot;: &quot;This is an array of [Group] objects that represent all the groups that [Permissions] should be aware of.&quot;,
             &quot;lua_type&quot;: &quot;{Group}&quot;,
             &quot;source&quot;: {
-                &quot;line&quot;: 11,
+                &quot;line&quot;: 76,
                 &quot;path&quot;: &quot;lib/init.lua&quot;
             }
         },
         {
             &quot;name&quot;: &quot;Users&quot;,
-            &quot;desc&quot;: &quot;A dictionary that contains Player.UserId in string format as the key and UserPresetData as it&#x27;s value.&quot;,
+            &quot;desc&quot;: &quot;A dictionary that which contains [Player.UserId] as the keys and [Permissions.UserPresetData] as the values.&quot;,
             &quot;lua_type&quot;: &quot;Dictionary&lt;UserPresetData&gt;&quot;,
             &quot;source&quot;: {
-                &quot;line&quot;: 25,
+                &quot;line&quot;: 92,
                 &quot;path&quot;: &quot;lib/init.lua&quot;
             }
         },
         {
             &quot;name&quot;: &quot;DefaultGroup&quot;,
-            &quot;desc&quot;: &quot;The default group that will be assigned automatically to joining users.&quot;,
+            &quot;desc&quot;: &quot;The default group is a [Group] that is automatically assigned to joining users.&quot;,
             &quot;lua_type&quot;: &quot;Group&quot;,
             &quot;source&quot;: {
-                &quot;line&quot;: 31,
+                &quot;line&quot;: 99,
                 &quot;path&quot;: &quot;lib/init.lua&quot;
             }
         }
@@ -58,7 +251,7 @@
     &quot;types&quot;: [
         {
             &quot;name&quot;: &quot;UserPresetData&quot;,
-            &quot;desc&quot;: &quot;The UserPresetData which will contain permission nodes and groups to be assigned to the user.&quot;,
+            &quot;desc&quot;: &quot;The UserPresetData is a table that contains permission nodes and [Group] names that will be assigned to the user.&quot;,
             &quot;fields&quot;: [
                 {
                     &quot;name&quot;: &quot;Permissions&quot;,
@@ -72,19 +265,19 @@
                 }
             ],
             &quot;source&quot;: {
-                &quot;line&quot;: 19,
+                &quot;line&quot;: 85,
                 &quot;path&quot;: &quot;lib/init.lua&quot;
             }
         }
     ],
     &quot;name&quot;: &quot;Config&quot;,
-    &quot;desc&quot;: &quot;This ModuleScript is where you can preset the groups used by permissions and preset users to have specific permissions and groups assigned to them. The ModuleScript must return a table with any of the properties displayed on this page.&quot;,
+    &quot;desc&quot;: &quot;This class was designed to implement permissions &amp; groups that get assigned to users used to restrict certain features across your game.\n\n## Configuration Example\n```lua\nlocal Permissions = require(PermissionsModule);\ntype Group = Permissions.Group;\n\n-- The Group class\nlocal Group: Permissions.Schema_Group = Permissions.Group;\n\n-- Any groups we will reuse in the Config we will need to store in a variable\nlocal defaultGroup: Group = Group.new(\&quot;Default\&quot;,{\&quot;example.default\&quot;});\nlocal example1: Group = Group.new(\&quot;Example1\&quot;,\&quot;example.permission1\&quot;);\n\nreturn {\n    Groups = {\n        defaultGroup -- The default group also must still be added\n\n        -- \&quot;Example 1\&quot; would contain permission nodes example.permission1\n        example1,\n\n        -- \&quot;Example 2\&quot; would inherit example1 permission nodes &amp; example.permission2\n        Group.new(\&quot;Example2\&quot;,\&quot;example.permission2\&quot;,example1),\n\n        -- \&quot;Example 3\&quot; would have the highest precedence a group could have\n        -- \&quot;Example 3\&quot; would have the inherited example.permission1 permission node\n        Group.new(\&quot;Example3\&quot;):SetPrecedence(0):SetInheritant(example1),\n\n        -- This will be used for later\n        Group.new(\&quot;Developer\&quot;,\&quot;example.superpermission\&quot;,defaultGroup),\n    },\n    Users = {\n        [\&quot;Player.UserId\&quot;] = {\n        --[[\n            You can place permission nodes inside Permissions to\n            automatically assign those permissions to that user.\n        --]]\n            Permissions = {\&quot;example.only_I_have_this_permission\&quot;},\n\n        --[[\n            You can place group names inside of Groups to have\n            the user automatically be assigned to those Groups.\n\n            This user would automatically be in the \&quot;Example 2\&quot; group\n        --]]\n            Groups = {\&quot;Example2\&quot;}\n        },\n        [\&quot;ownerid\&quot;] = {\n            -- Optionally grant this specific user all permissions\n            Permissions = {\&quot;*\&quot;},\n\n            -- Assign this user to the Developer group we made earlier\n            Groups = {\&quot;Developer\&quot;}\n        }\n    },\n    DefaultGroup = defaultGroup\n}\n```\n\n:::note\n\n&gt;You still have to add the Default Group to the [Config.Groups] table.\n\n:::&quot;,
     &quot;source&quot;: {
-        &quot;line&quot;: 5,
+        &quot;line&quot;: 69,
         &quot;path&quot;: &quot;lib/init.lua&quot;
     }
 }</pre></details></div><div class="col col--3"><div class="tableOfContents_bqdL thin-scrollbar"><ul class="table-of-contents table-of-contents__left-border"><li><a href="#types" class="table-of-contents__link toc-highlight">Types</a><ul><li><a href="#UserPresetData" class="table-of-contents__link toc-highlight">UserPresetData</a></li></ul></li><li><a href="#properties" class="table-of-contents__link toc-highlight">Properties</a><ul><li><a href="#DefaultGroup" class="table-of-contents__link toc-highlight">DefaultGroup</a></li><li><a href="#Groups" class="table-of-contents__link toc-highlight">Groups</a></li><li><a href="#Users" class="table-of-contents__link toc-highlight">Users</a></li></ul></li><li><a href="#functions" class="table-of-contents__link toc-highlight">Functions</a></li></ul></div></div></div></div></main></div></div><footer class="footer footer--dark"><div class="container container-fluid"><div class="footer__bottom text--center"><div class="footer__copyright">Copyright © 2022 dev-syn. Built with Moonwave and Docusaurus.</div></div></div></footer></div>
-<script src="/rbx-permissions/assets/js/runtime~main.77f0c7cd.js"></script>
-<script src="/rbx-permissions/assets/js/main.3d9b76d2.js"></script>
+<script src="/rbx-permissions/assets/js/runtime~main.ec73c7a7.js"></script>
+<script src="/rbx-permissions/assets/js/main.6f3c60ce.js"></script>
 </body>
 </html>
