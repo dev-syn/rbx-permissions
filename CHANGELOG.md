@@ -2,6 +2,10 @@
 
 ## [Unreleased]
 
+## [0.3.0]
+### Added
+- Permissions.LoadConfig used to load configuration files into Permissions
+
 ## [0.2.3]
 ### Removed
 - Dependencies folder inside Permissions (mb)
