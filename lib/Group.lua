@@ -1,4 +1,4 @@
---- @module lib/Types
+--- @module Permissions/lib/Types
 local Types = require(script.Parent:FindFirstChild("Types"));
 
 export type Group = Types.Group;

@@ -97,8 +97,9 @@
     The default group is a [Group] that is automatically assigned to joining users.
 ]=]
 
---- @module lib/Types
+--- @module Permissions/lib/Types
 local Types = require(script:FindFirstChild("Types"));
+
 type Dictionary<T> = Types.Dictionary<T>;
 
 export type Schema_Group = Types.Schema_Group;

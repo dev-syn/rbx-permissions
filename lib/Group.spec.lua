@@ -1,6 +1,6 @@
 return function()
     local PermissionsModule: ModuleScript = script.Parent;
-    --- @module lib/Types
+    --- @module Permissions/lib/Types
     local Types = require(PermissionsModule:FindFirstChild("Types"));
     type Group = Types.Group;
     local Permissions: Types.Permissions = require(PermissionsModule);
