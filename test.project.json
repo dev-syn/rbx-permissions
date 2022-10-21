@@ -3,11 +3,13 @@
   "tree": {
     "$className": "DataModel",
 
+    "ReplicatedStorage": {
+      "Dependencies": {"$path": "Packages"}
+    },
+
     "ServerScriptService": {
       "Permissions": {
-        "$path": "lib",
-        "Dependencies": {"$path": "Packages"}
-      },
+        "$path": "lib"},
       "testRunner": {"$path": "Tests/testRunner.server.lua"}
     }
   }
