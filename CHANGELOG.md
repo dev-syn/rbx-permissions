@@ -2,6 +2,10 @@
 
 ## [Unreleased]
 
+## [0.3.1]
+### Changed
+- Fix @module type links to Permissions/lib/Types
+
 ## [0.3.0]
 ### Added
 - Permissions.LoadConfig used to load configuration files into Permissions
