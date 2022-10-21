@@ -99,7 +99,9 @@
 
 --- @module lib/Types
 local Types = require(script:FindFirstChild("Types"));
-export type Dictionary<T> = Types.Dictionary<T>;
+type Dictionary<T> = Types.Dictionary<T>;
+
+export type Schema_Group = Types.Schema_Group;
 export type Group = Types.Group;
 export type Permissions = Types.Permissions;
 
